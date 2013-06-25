@@ -1,0 +1,1642 @@
+-------------------------------------------
+          step1: extract data
+          extract pdps flow from ods_ad_sax_video_impression
+[INFO] process start: src/extract_data/extract_data.sh
+[INFO] .......
+extract_data PWD: /data1/temp/optimus/qixiang/video_forecast
+extract_data date: 20130623
+add jar /data1/temp/optimus/qixiang/video_forecast/java/videoTools.jar ; create temporary function calPdps as 'com.sina.video.tools.CalculateAdsPdpsUDF' ; insert overwrite table vide_forecast_qixiang_pv partition(dt='20130623') select a.pdps, count(*) from ( select calPdps(user_tag) pdps from ods_ad_sax_video_impression where dt='20130623' and user_tag['pos']='head' )a where a.pdps!='UNKNOWN' group by a.pdps;
+Hive history file=/data0/hadoop/hivelog/hive_job_log_optimus_201306241821_1633903682.txt
+Added /data1/temp/optimus/qixiang/video_forecast/java/videoTools.jar to class path
+Added resource: /data1/temp/optimus/qixiang/video_forecast/java/videoTools.jar
+OK
+Time taken: 0.439 seconds
+Total MapReduce jobs = 1
+Launching Job 1 out of 1
+Number of reduce tasks not specified. Estimated from input data size: 16
+In order to change the average load for a reducer (in bytes):
+  set hive.exec.reducers.bytes.per.reducer=<number>
+In order to limit the maximum number of reducers:
+  set hive.exec.reducers.max=<number>
+In order to set a constant number of reducers:
+  set mapred.reduce.tasks=<number>
+Starting Job = job_201304091806_2755690, Tracking URL = http://jt1.hadoop.data.sina.com.cn:50030/jobdetails.jsp?jobid=job_201304091806_2755690
+Kill Command = /usr/local/hadoop-0.20.203.0/bin/../bin/hadoop job  -Dmapred.job.tracker=jt1.hadoop.data.sina.com.cn:8021 -kill job_201304091806_2755690
+2013-06-24 18:22:04,979 Stage-1 map = 0%,  reduce = 0%
+2013-06-24 18:22:16,682 Stage-1 map = 3%,  reduce = 0%
+2013-06-24 18:22:17,865 Stage-1 map = 4%,  reduce = 0%
+2013-06-24 18:22:18,991 Stage-1 map = 15%,  reduce = 0%
+2013-06-24 18:22:20,061 Stage-1 map = 17%,  reduce = 0%
+2013-06-24 18:22:21,070 Stage-1 map = 23%,  reduce = 0%
+2013-06-24 18:22:22,079 Stage-1 map = 37%,  reduce = 0%
+2013-06-24 18:22:23,086 Stage-1 map = 39%,  reduce = 0%
+2013-06-24 18:22:24,093 Stage-1 map = 45%,  reduce = 0%
+2013-06-24 18:22:25,103 Stage-1 map = 58%,  reduce = 0%
+2013-06-24 18:22:26,111 Stage-1 map = 60%,  reduce = 0%
+2013-06-24 18:22:27,118 Stage-1 map = 67%,  reduce = 0%
+2013-06-24 18:22:28,228 Stage-1 map = 76%,  reduce = 0%
+2013-06-24 18:22:29,236 Stage-1 map = 80%,  reduce = 0%
+2013-06-24 18:22:30,245 Stage-1 map = 85%,  reduce = 0%
+2013-06-24 18:22:31,364 Stage-1 map = 89%,  reduce = 0%
+2013-06-24 18:22:32,373 Stage-1 map = 91%,  reduce = 0%
+2013-06-24 18:22:33,393 Stage-1 map = 93%,  reduce = 0%
+2013-06-24 18:22:34,441 Stage-1 map = 94%,  reduce = 0%
+2013-06-24 18:22:35,448 Stage-1 map = 95%,  reduce = 0%
+2013-06-24 18:22:36,459 Stage-1 map = 97%,  reduce = 0%
+2013-06-24 18:22:38,477 Stage-1 map = 97%,  reduce = 2%
+2013-06-24 18:22:39,488 Stage-1 map = 99%,  reduce = 2%
+2013-06-24 18:22:40,497 Stage-1 map = 99%,  reduce = 19%
+2013-06-24 18:22:43,772 Stage-1 map = 99%,  reduce = 27%
+2013-06-24 18:22:45,807 Stage-1 map = 100%,  reduce = 27%
+2013-06-24 18:22:49,837 Stage-1 map = 100%,  reduce = 32%
+2013-06-24 18:22:56,109 Stage-1 map = 100%,  reduce = 60%
+2013-06-24 18:22:59,149 Stage-1 map = 100%,  reduce = 96%
+2013-06-24 18:23:02,173 Stage-1 map = 100%,  reduce = 100%
+Ended Job = job_201304091806_2755690
+Loading data to table default.vide_forecast_qixiang_pv partition (dt=20130623)
+Moved to trash: hdfs://nn1.hadoop.data.sina.com.cn/user/optimus/warehouse/vide_forecast_qixiang_pv/dt=20130623
+12 Rows loaded to vide_forecast_qixiang_pv
+OK
+Time taken: 79.23 seconds
+-------------------------------------------
+          step2: predict flow
++++ ls -l src/prediction_flow/prediction_main.sh
++++ awk '{print $NF;}'
+++ dirname src/prediction_flow/prediction_main.sh
++ cd src/prediction_flow/../..
+++ pwd
++ WORK_DIR=/data1/temp/optimus/qixiang/video_forecast
++ echo '[INFO] process start src/prediction_flow/prediction_main.sh'
+[INFO] process start src/prediction_flow/prediction_main.sh
++ echo '[INFO] .......'
+[INFO] .......
++ echo '[INFO] predict_main PWD: /data1/temp/optimus/qixiang/video_forecast'
+[INFO] predict_main PWD: /data1/temp/optimus/qixiang/video_forecast
++ '[' 0 -ne 0 ']'
+++ date +%Y%m%d -d -1days
++ Date=20130623
++ echo '[INFO] predict_main Date:' 20130623
+[INFO] predict_main Date: 20130623
++ source /data1/temp/optimus/qixiang/video_forecast/conf/default.conf
+++ jarArch=/data1/temp/optimus/qixiang/video_forecast/java/videoTools.jar
+++ TABLE_SAX_NAME=ods_ad_sax_video_impression
+++ TABLE_FLOW_NAME=vide_forecast_qixiang_pv
+++ RSCRIPT=model/Rscript
+++ MODEL_FILE=HW_model.r
+++ TRAIN_DAYS=30
+++ TOTAL_PREDICTION_DAYS=90
+++ PREDICTION_DAYS=30
+++ RESERVED_DAYS=60
+++ RESULT_DATA=pdps_flow_predict.data
+++ DB_CONF=db.conf
++ doForecast
++ Data_dir=/data1/temp/optimus/qixiang/video_forecast/data
++ Model_file=/data1/temp/optimus/qixiang/video_forecast/model/HW_model.r
++ echo '[INFO] data_fir /data1/temp/optimus/qixiang/video_forecast/data'
+[INFO] data_fir /data1/temp/optimus/qixiang/video_forecast/data
++ echo '[INFO] Model_file /data1/temp/optimus/qixiang/video_forecast/model/HW_model.r'
+[INFO] Model_file /data1/temp/optimus/qixiang/video_forecast/model/HW_model.r
+++ date -d '20130623 29 days ago' +%Y%m%d
++ train_begin_date=20130525
+++ date -d '20130623 60 days ago' +%Y%m%d
++ reserve_date=20130424
++ echo '[INFO] train_begin_date 20130525'
+[INFO] train_begin_date 20130525
++ echo '[INFO] reserve_date 20130424'
+[INFO] reserve_date 20130424
++ echo '[INFO] delete old data:'
+[INFO] delete old data:
++ echo '[INFO] ......'
+[INFO] ......
++ hive_drop_data='
+		alter table vide_forecast_qixiang_pv drop partition(dt='\''20130424'\'') ;
+	'
++ echo '
+		alter table vide_forecast_qixiang_pv drop partition(dt='\''20130424'\'') ;
+	'
+
+		alter table vide_forecast_qixiang_pv drop partition(dt='20130424') ;
+	
++ echo '[INFO] download data from vide_forecast_qixiang_pv'
+[INFO] download data from vide_forecast_qixiang_pv
++ echo '[INFO] ......'
+[INFO] ......
++ hive_download_data='
+		insert overwrite local directory '\''/data1/temp/optimus/qixiang/video_forecast/data/pdps'\''
+		select pdps, pv, dt from vide_forecast_qixiang_pv
+		where dt<='\''20130623'\'' and dt>='\''20130525'\'';
+	'
++ echo ''
+
++ hive -e '
+		insert overwrite local directory '\''/data1/temp/optimus/qixiang/video_forecast/data/pdps'\''
+		select pdps, pv, dt from vide_forecast_qixiang_pv
+		where dt<='\''20130623'\'' and dt>='\''20130525'\'';
+	'
+Hive history file=/data0/hadoop/hivelog/hive_job_log_optimus_201306241823_395291667.txt
+Total MapReduce jobs = 1
+Launching Job 1 out of 1
+Number of reduce tasks is set to 0 since there's no reduce operator
+Starting Job = job_201304091806_2755751, Tracking URL = http://jt1.hadoop.data.sina.com.cn:50030/jobdetails.jsp?jobid=job_201304091806_2755751
+Kill Command = /usr/local/hadoop-0.20.203.0/bin/../bin/hadoop job  -Dmapred.job.tracker=jt1.hadoop.data.sina.com.cn:8021 -kill job_201304091806_2755751
+2013-06-24 18:23:26,902 Stage-1 map = 0%,  reduce = 0%
+2013-06-24 18:23:34,431 Stage-1 map = 2%,  reduce = 0%
+2013-06-24 18:23:36,462 Stage-1 map = 5%,  reduce = 0%
+2013-06-24 18:23:37,496 Stage-1 map = 84%,  reduce = 0%
+2013-06-24 18:23:41,420 Stage-1 map = 86%,  reduce = 0%
+2013-06-24 18:23:42,430 Stage-1 map = 87%,  reduce = 0%
+2013-06-24 18:23:43,440 Stage-1 map = 90%,  reduce = 0%
+2013-06-24 18:23:45,461 Stage-1 map = 91%,  reduce = 0%
+2013-06-24 18:23:46,472 Stage-1 map = 98%,  reduce = 0%
+2013-06-24 18:23:47,607 Stage-1 map = 99%,  reduce = 0%
+2013-06-24 18:23:49,697 Stage-1 map = 100%,  reduce = 0%
+2013-06-24 18:24:50,888 Stage-1 map = 100%,  reduce = 0%
+2013-06-24 18:24:56,408 Stage-1 map = 100%,  reduce = 100%
+Ended Job = job_201304091806_2755751
+Copying data to local directory /data1/temp/optimus/qixiang/video_forecast/data/pdps
+Copying data to local directory /data1/temp/optimus/qixiang/video_forecast/data/pdps
+324 Rows loaded to /data1/temp/optimus/qixiang/video_forecast/data/pdps
+OK
+Time taken: 112.705 seconds
++ tr '\001' '\t'
++ cat /data1/temp/optimus/qixiang/video_forecast/data/pdps/000000_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000001_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000002_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000003_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000004_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000005_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000006_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000007_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000008_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000009_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000010_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000011_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000012_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000013_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000014_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000015_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000016_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000017_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000018_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000019_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000020_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000021_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000022_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000023_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000024_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000025_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000026_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000027_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000028_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000029_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000030_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000031_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000032_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000033_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000034_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000035_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000036_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000037_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000038_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000039_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000040_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000041_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000042_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000043_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000044_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000045_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000046_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000047_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000048_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000049_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000050_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000051_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000052_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000053_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000054_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000055_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000056_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000057_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000058_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000059_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000060_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000061_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000062_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000063_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000064_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000065_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000066_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000067_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000068_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000069_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000070_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000071_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000072_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000073_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000074_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000075_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000076_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000077_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000078_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000079_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000080_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000081_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000082_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000083_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000084_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000085_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000086_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000087_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000088_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000089_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000090_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000091_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000092_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000093_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000094_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000095_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000096_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000097_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000098_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000099_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000100_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000101_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000102_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000103_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000104_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000105_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000106_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000107_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000108_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000109_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000110_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000111_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000112_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000113_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000114_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000115_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000116_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000117_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000118_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000119_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000120_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000121_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000122_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000123_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000124_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000125_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000126_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000127_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000128_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000129_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000130_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000131_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000132_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000133_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000134_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000135_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000136_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000137_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000138_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000139_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000140_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000141_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000142_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000143_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000144_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000145_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000146_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000147_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000148_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000149_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000150_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000151_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000152_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000153_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000154_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000155_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000156_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000157_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000158_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000159_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000160_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000161_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000162_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000163_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000164_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000165_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000166_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000167_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000168_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000169_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000170_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000171_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000172_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000173_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000174_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000175_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000176_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000177_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000178_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000179_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000180_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000181_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000182_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000183_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000184_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000185_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000186_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000187_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000188_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000189_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000190_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000191_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000192_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000193_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000194_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000195_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000196_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000197_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000198_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000199_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000200_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000201_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000202_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000203_0 /data1/temp/optimus/qixiang/video_forecast/data/pdps/000204_0
++ echo '[INFO] transform format:'
+[INFO] transform format:
++ echo '[INFO] ......'
+[INFO] ......
++ sort -k 1,1 -k 3,3 /data1/temp/optimus/qixiang/video_forecast/data/pdps_history.data
++ python /data1/temp/optimus/qixiang/video_forecast/src/prediction_flow/transform/transform_normal_2_r.py /data1/temp/optimus/qixiang/video_forecast/data/pdps_history_sort.data 30 /data1/temp/optimus/qixiang/video_forecast/data/pdps_rscript.data /data1/temp/optimus/qixiang/video_forecast/data/pdps_rscript_wrong.data
++ echo '[INFO] predict flow:'
+[INFO] predict flow:
++ echo '[INFO] ......'
+[INFO] ......
++ echo 'model/Rscript /data1/temp/optimus/qixiang/video_forecast/model/HW_model.r /data1/temp/optimus/qixiang/video_forecast/data/pdps_rscript.data 30 > /data1/temp/optimus/qixiang/video_forecast/data/pdps_rscript_prediction.data'
+model/Rscript /data1/temp/optimus/qixiang/video_forecast/model/HW_model.r /data1/temp/optimus/qixiang/video_forecast/data/pdps_rscript.data 30 > /data1/temp/optimus/qixiang/video_forecast/data/pdps_rscript_prediction.data
++ model/Rscript /data1/temp/optimus/qixiang/video_forecast/model/HW_model.r /data1/temp/optimus/qixiang/video_forecast/data/pdps_rscript.data 30
++ echo '[INFO] parse result format:'
+[INFO] parse result format:
++ echo ......
+......
++ echo ''
+
++ python /data1/temp/optimus/qixiang/video_forecast/src/prediction_flow/transform/transform_r_2_normal.py /data1/temp/optimus/qixiang/video_forecast/data/pdps_rscript_prediction.data 20130623 90 /data1/temp/optimus/qixiang/video_forecast/data/pdps_prediction.data
++ echo '[INFO] copyFlow'
+[INFO] copyFlow
++ echo '[INFO] ......'
+[INFO] ......
++ sort -k 1,1 /data1/temp/optimus/qixiang/video_forecast/data/pdps_prediction.data
++ java -cp /data1/temp/optimus/qixiang/video_forecast/java/videoTools.jar com.sina.video.tools.CalculateCopyFlow /data1/temp/optimus/qixiang/video_forecast/data/pdps_flow_predict.data /data1/temp/optimus/qixiang/video_forecast/data/pdps_prediction_sort.data
+head2#*#*=1.0#head#long#1,2,3,4
+pause#*#*=0.6#head#long,medium,short#1,2,3,4
+corner#*#*=0.9#head#long,medium,short#1,2,3,4
+trail#*#*=0.5#head#long,medium,short#1,2,3,4
+[INFO] CalculateCopyFlow-run: start
+[INFO] CalculateCopyFlow-run: errorline	0
++ echo '[INFO] end'
+[INFO] end
+-------------------------------------------
+          step3: insert result data into hive
+PWD=/data1/temp/optimus/qixiang/video_forecast
+Succeeded connection to the Database!
+[INFO]: pdps prediction file: data/pdps_flow_predict.data
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130624','head#long#1',1675990) on duplicate key update flow=1675990
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130624','head#long#2',806250) on duplicate key update flow=806250
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130624','head#long#3',807012) on duplicate key update flow=807012
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130624','head#long#4',807074) on duplicate key update flow=807074
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130624','head#medium#1',7205298) on duplicate key update flow=7205298
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130624','head#medium#2',4018640) on duplicate key update flow=4018640
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130624','head#medium#3',4023364) on duplicate key update flow=4023364
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130624','head#medium#4',3982649) on duplicate key update flow=3982649
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130624','head#short#1',1410296) on duplicate key update flow=1410296
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130624','head#short#2',1111895) on duplicate key update flow=1111895
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130624','head#short#3',1114653) on duplicate key update flow=1114653
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130624','head#short#4',1090811) on duplicate key update flow=1090811
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130624','head2#*#*',4096326) on duplicate key update flow=4096326
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130624','corner#*#*',25248538) on duplicate key update flow=25248538
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130624','pause#*#*',16832359) on duplicate key update flow=16832359
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130624','trail#*#*',14026966) on duplicate key update flow=14026966
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130625','head#long#1',1549200) on duplicate key update flow=1549200
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130625','head#long#2',690386) on duplicate key update flow=690386
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130625','head#long#3',690899) on duplicate key update flow=690899
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130625','head#long#4',689739) on duplicate key update flow=689739
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130625','head#medium#1',6158463) on duplicate key update flow=6158463
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130625','head#medium#2',3050108) on duplicate key update flow=3050108
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130625','head#medium#3',3050693) on duplicate key update flow=3050693
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130625','head#medium#4',3033763) on duplicate key update flow=3033763
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130625','head#short#1',1565539) on duplicate key update flow=1565539
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130625','head#short#2',1266428) on duplicate key update flow=1266428
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130625','head#short#3',1273633) on duplicate key update flow=1273633
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130625','head#short#4',1237110) on duplicate key update flow=1237110
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130625','head2#*#*',3620224) on duplicate key update flow=3620224
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130625','corner#*#*',21830364) on duplicate key update flow=21830364
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130625','pause#*#*',14553576) on duplicate key update flow=14553576
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130625','trail#*#*',12127980) on duplicate key update flow=12127980
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130626','head#long#1',1559255) on duplicate key update flow=1559255
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130626','head#long#2',693105) on duplicate key update flow=693105
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130626','head#long#3',693608) on duplicate key update flow=693608
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130626','head#long#4',693989) on duplicate key update flow=693989
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130626','head#medium#1',6553748) on duplicate key update flow=6553748
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130626','head#medium#2',4032645) on duplicate key update flow=4032645
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130626','head#medium#3',4026605) on duplicate key update flow=4026605
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130626','head#medium#4',3985644) on duplicate key update flow=3985644
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130626','head#short#1',1080058) on duplicate key update flow=1080058
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130626','head#short#2',808031) on duplicate key update flow=808031
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130626','head#short#3',806709) on duplicate key update flow=806709
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130626','head#short#4',794926) on duplicate key update flow=794926
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130626','head2#*#*',3639957) on duplicate key update flow=3639957
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130626','corner#*#*',23155490) on duplicate key update flow=23155490
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130626','pause#*#*',15436993) on duplicate key update flow=15436993
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130626','trail#*#*',12864161) on duplicate key update flow=12864161
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130627','head#long#1',1482472) on duplicate key update flow=1482472
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130627','head#long#2',639204) on duplicate key update flow=639204
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130627','head#long#3',639744) on duplicate key update flow=639744
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130627','head#long#4',639562) on duplicate key update flow=639562
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130627','head#medium#1',1021508) on duplicate key update flow=1021508
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130627','head#medium#2',666234) on duplicate key update flow=666234
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130627','head#medium#3',665525) on duplicate key update flow=665525
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130627','head#medium#4',659128) on duplicate key update flow=659128
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130627','head#short#1',501906) on duplicate key update flow=501906
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130627','head#short#2',323710) on duplicate key update flow=323710
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130627','head#short#3',323662) on duplicate key update flow=323662
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130627','head#short#4',335698) on duplicate key update flow=335698
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130627','head2#*#*',3400982) on duplicate key update flow=3400982
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130627','corner#*#*',7108517) on duplicate key update flow=7108517
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130627','pause#*#*',4739011) on duplicate key update flow=4739011
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130627','trail#*#*',3949176) on duplicate key update flow=3949176
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130628','head#long#1',1606239) on duplicate key update flow=1606239
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130628','head#long#2',754202) on duplicate key update flow=754202
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130628','head#long#3',757374) on duplicate key update flow=757374
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130628','head#long#4',756691) on duplicate key update flow=756691
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130628','head#medium#1',3012605) on duplicate key update flow=3012605
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130628','head#medium#2',2090583) on duplicate key update flow=2090583
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130628','head#medium#3',2099676) on duplicate key update flow=2099676
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130628','head#medium#4',2065956) on duplicate key update flow=2065956
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130628','head#short#1',1695145) on duplicate key update flow=1695145
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130628','head#short#2',1402701) on duplicate key update flow=1402701
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130628','head#short#3',1408623) on duplicate key update flow=1408623
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130628','head#short#4',1327431) on duplicate key update flow=1327431
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130628','head2#*#*',3874506) on duplicate key update flow=3874506
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130628','corner#*#*',17079503) on duplicate key update flow=17079503
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130628','pause#*#*',11386335) on duplicate key update flow=11386335
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130628','trail#*#*',9488613) on duplicate key update flow=9488613
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130629','head#long#1',1489148) on duplicate key update flow=1489148
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130629','head#long#2',648085) on duplicate key update flow=648085
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130629','head#long#3',648738) on duplicate key update flow=648738
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130629','head#long#4',648594) on duplicate key update flow=648594
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130629','head#medium#1',2369627) on duplicate key update flow=2369627
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130629','head#medium#2',1243823) on duplicate key update flow=1243823
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130629','head#medium#3',1249645) on duplicate key update flow=1249645
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130629','head#medium#4',1247268) on duplicate key update flow=1247268
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130629','head#short#1',658329) on duplicate key update flow=658329
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130629','head#short#2',452397) on duplicate key update flow=452397
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130629','head#short#3',454854) on duplicate key update flow=454854
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130629','head#short#4',457352) on duplicate key update flow=457352
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130629','head2#*#*',3434565) on duplicate key update flow=3434565
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130629','corner#*#*',10411074) on duplicate key update flow=10411074
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130629','pause#*#*',6940716) on duplicate key update flow=6940716
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130629','trail#*#*',5783930) on duplicate key update flow=5783930
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130630','head#long#1',1942609) on duplicate key update flow=1942609
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130630','head#long#2',1026675) on duplicate key update flow=1026675
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130630','head#long#3',1027209) on duplicate key update flow=1027209
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130630','head#long#4',1026575) on duplicate key update flow=1026575
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130630','head#medium#1',6678250) on duplicate key update flow=6678250
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130630','head#medium#2',3148466) on duplicate key update flow=3148466
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130630','head#medium#3',3151909) on duplicate key update flow=3151909
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130630','head#medium#4',3145211) on duplicate key update flow=3145211
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130630','head#short#1',1196922) on duplicate key update flow=1196922
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130630','head#short#2',920731) on duplicate key update flow=920731
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130630','head#short#3',923417) on duplicate key update flow=923417
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130630','head#short#4',897422) on duplicate key update flow=897422
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130630','head2#*#*',5023068) on duplicate key update flow=5023068
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130630','corner#*#*',22576856) on duplicate key update flow=22576856
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130630','pause#*#*',15051237) on duplicate key update flow=15051237
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130630','trail#*#*',12542698) on duplicate key update flow=12542698
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130701','head#long#1',1675990) on duplicate key update flow=1675990
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130701','head#long#2',806250) on duplicate key update flow=806250
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130701','head#long#3',807012) on duplicate key update flow=807012
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130701','head#long#4',807074) on duplicate key update flow=807074
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130701','head#medium#1',7205298) on duplicate key update flow=7205298
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130701','head#medium#2',4018640) on duplicate key update flow=4018640
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130701','head#medium#3',4023364) on duplicate key update flow=4023364
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130701','head#medium#4',3982649) on duplicate key update flow=3982649
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130701','head#short#1',1410296) on duplicate key update flow=1410296
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130701','head#short#2',1111895) on duplicate key update flow=1111895
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130701','head#short#3',1114653) on duplicate key update flow=1114653
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130701','head#short#4',1090811) on duplicate key update flow=1090811
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130701','head2#*#*',4096326) on duplicate key update flow=4096326
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130701','corner#*#*',25248538) on duplicate key update flow=25248538
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130701','pause#*#*',16832359) on duplicate key update flow=16832359
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130701','trail#*#*',14026966) on duplicate key update flow=14026966
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130702','head#long#1',1549200) on duplicate key update flow=1549200
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130702','head#long#2',690386) on duplicate key update flow=690386
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130702','head#long#3',690899) on duplicate key update flow=690899
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130702','head#long#4',689739) on duplicate key update flow=689739
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130702','head#medium#1',6158463) on duplicate key update flow=6158463
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130702','head#medium#2',3050108) on duplicate key update flow=3050108
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130702','head#medium#3',3050693) on duplicate key update flow=3050693
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130702','head#medium#4',3033763) on duplicate key update flow=3033763
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130702','head#short#1',1565539) on duplicate key update flow=1565539
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130702','head#short#2',1266428) on duplicate key update flow=1266428
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130702','head#short#3',1273633) on duplicate key update flow=1273633
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130702','head#short#4',1237110) on duplicate key update flow=1237110
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130702','head2#*#*',3620224) on duplicate key update flow=3620224
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130702','corner#*#*',21830364) on duplicate key update flow=21830364
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130702','pause#*#*',14553576) on duplicate key update flow=14553576
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130702','trail#*#*',12127980) on duplicate key update flow=12127980
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130703','head#long#1',1559255) on duplicate key update flow=1559255
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130703','head#long#2',693105) on duplicate key update flow=693105
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130703','head#long#3',693608) on duplicate key update flow=693608
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130703','head#long#4',693989) on duplicate key update flow=693989
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130703','head#medium#1',6553748) on duplicate key update flow=6553748
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130703','head#medium#2',4032645) on duplicate key update flow=4032645
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130703','head#medium#3',4026605) on duplicate key update flow=4026605
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130703','head#medium#4',3985644) on duplicate key update flow=3985644
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130703','head#short#1',1080058) on duplicate key update flow=1080058
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130703','head#short#2',808031) on duplicate key update flow=808031
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130703','head#short#3',806709) on duplicate key update flow=806709
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130703','head#short#4',794926) on duplicate key update flow=794926
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130703','head2#*#*',3639957) on duplicate key update flow=3639957
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130703','corner#*#*',23155490) on duplicate key update flow=23155490
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130703','pause#*#*',15436993) on duplicate key update flow=15436993
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130703','trail#*#*',12864161) on duplicate key update flow=12864161
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130704','head#long#1',1482472) on duplicate key update flow=1482472
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130704','head#long#2',639204) on duplicate key update flow=639204
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130704','head#long#3',639744) on duplicate key update flow=639744
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130704','head#long#4',639562) on duplicate key update flow=639562
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130704','head#medium#1',1021508) on duplicate key update flow=1021508
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130704','head#medium#2',666234) on duplicate key update flow=666234
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130704','head#medium#3',665525) on duplicate key update flow=665525
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130704','head#medium#4',659128) on duplicate key update flow=659128
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130704','head#short#1',501906) on duplicate key update flow=501906
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130704','head#short#2',323710) on duplicate key update flow=323710
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130704','head#short#3',323662) on duplicate key update flow=323662
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130704','head#short#4',335698) on duplicate key update flow=335698
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130704','head2#*#*',3400982) on duplicate key update flow=3400982
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130704','corner#*#*',7108517) on duplicate key update flow=7108517
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130704','pause#*#*',4739011) on duplicate key update flow=4739011
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130704','trail#*#*',3949176) on duplicate key update flow=3949176
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130705','head#long#1',1606239) on duplicate key update flow=1606239
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130705','head#long#2',754202) on duplicate key update flow=754202
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130705','head#long#3',757374) on duplicate key update flow=757374
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130705','head#long#4',756691) on duplicate key update flow=756691
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130705','head#medium#1',3012605) on duplicate key update flow=3012605
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130705','head#medium#2',2090583) on duplicate key update flow=2090583
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130705','head#medium#3',2099676) on duplicate key update flow=2099676
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130705','head#medium#4',2065956) on duplicate key update flow=2065956
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130705','head#short#1',1695145) on duplicate key update flow=1695145
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130705','head#short#2',1402701) on duplicate key update flow=1402701
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130705','head#short#3',1408623) on duplicate key update flow=1408623
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130705','head#short#4',1327431) on duplicate key update flow=1327431
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130705','head2#*#*',3874506) on duplicate key update flow=3874506
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130705','corner#*#*',17079503) on duplicate key update flow=17079503
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130705','pause#*#*',11386335) on duplicate key update flow=11386335
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130705','trail#*#*',9488613) on duplicate key update flow=9488613
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130706','head#long#1',1489148) on duplicate key update flow=1489148
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130706','head#long#2',648085) on duplicate key update flow=648085
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130706','head#long#3',648738) on duplicate key update flow=648738
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130706','head#long#4',648594) on duplicate key update flow=648594
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130706','head#medium#1',2369627) on duplicate key update flow=2369627
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130706','head#medium#2',1243823) on duplicate key update flow=1243823
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130706','head#medium#3',1249645) on duplicate key update flow=1249645
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130706','head#medium#4',1247268) on duplicate key update flow=1247268
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130706','head#short#1',658329) on duplicate key update flow=658329
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130706','head#short#2',452397) on duplicate key update flow=452397
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130706','head#short#3',454854) on duplicate key update flow=454854
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130706','head#short#4',457352) on duplicate key update flow=457352
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130706','head2#*#*',3434565) on duplicate key update flow=3434565
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130706','corner#*#*',10411074) on duplicate key update flow=10411074
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130706','pause#*#*',6940716) on duplicate key update flow=6940716
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130706','trail#*#*',5783930) on duplicate key update flow=5783930
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130707','head#long#1',1942609) on duplicate key update flow=1942609
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130707','head#long#2',1026675) on duplicate key update flow=1026675
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130707','head#long#3',1027209) on duplicate key update flow=1027209
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130707','head#long#4',1026575) on duplicate key update flow=1026575
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130707','head#medium#1',6678250) on duplicate key update flow=6678250
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130707','head#medium#2',3148466) on duplicate key update flow=3148466
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130707','head#medium#3',3151909) on duplicate key update flow=3151909
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130707','head#medium#4',3145211) on duplicate key update flow=3145211
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130707','head#short#1',1196922) on duplicate key update flow=1196922
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130707','head#short#2',920731) on duplicate key update flow=920731
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130707','head#short#3',923417) on duplicate key update flow=923417
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130707','head#short#4',897422) on duplicate key update flow=897422
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130707','head2#*#*',5023068) on duplicate key update flow=5023068
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130707','corner#*#*',22576856) on duplicate key update flow=22576856
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130707','pause#*#*',15051237) on duplicate key update flow=15051237
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130707','trail#*#*',12542698) on duplicate key update flow=12542698
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130708','head#long#1',1675990) on duplicate key update flow=1675990
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130708','head#long#2',806250) on duplicate key update flow=806250
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130708','head#long#3',807012) on duplicate key update flow=807012
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130708','head#long#4',807074) on duplicate key update flow=807074
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130708','head#medium#1',7205298) on duplicate key update flow=7205298
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130708','head#medium#2',4018640) on duplicate key update flow=4018640
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130708','head#medium#3',4023364) on duplicate key update flow=4023364
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130708','head#medium#4',3982649) on duplicate key update flow=3982649
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130708','head#short#1',1410296) on duplicate key update flow=1410296
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130708','head#short#2',1111895) on duplicate key update flow=1111895
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130708','head#short#3',1114653) on duplicate key update flow=1114653
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130708','head#short#4',1090811) on duplicate key update flow=1090811
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130708','head2#*#*',4096326) on duplicate key update flow=4096326
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130708','corner#*#*',25248538) on duplicate key update flow=25248538
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130708','pause#*#*',16832359) on duplicate key update flow=16832359
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130708','trail#*#*',14026966) on duplicate key update flow=14026966
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130709','head#long#1',1549200) on duplicate key update flow=1549200
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130709','head#long#2',690386) on duplicate key update flow=690386
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130709','head#long#3',690899) on duplicate key update flow=690899
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130709','head#long#4',689739) on duplicate key update flow=689739
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130709','head#medium#1',6158463) on duplicate key update flow=6158463
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130709','head#medium#2',3050108) on duplicate key update flow=3050108
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130709','head#medium#3',3050693) on duplicate key update flow=3050693
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130709','head#medium#4',3033763) on duplicate key update flow=3033763
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130709','head#short#1',1565539) on duplicate key update flow=1565539
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130709','head#short#2',1266428) on duplicate key update flow=1266428
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130709','head#short#3',1273633) on duplicate key update flow=1273633
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130709','head#short#4',1237110) on duplicate key update flow=1237110
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130709','head2#*#*',3620224) on duplicate key update flow=3620224
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130709','corner#*#*',21830364) on duplicate key update flow=21830364
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130709','pause#*#*',14553576) on duplicate key update flow=14553576
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130709','trail#*#*',12127980) on duplicate key update flow=12127980
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130710','head#long#1',1559255) on duplicate key update flow=1559255
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130710','head#long#2',693105) on duplicate key update flow=693105
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130710','head#long#3',693608) on duplicate key update flow=693608
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130710','head#long#4',693989) on duplicate key update flow=693989
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130710','head#medium#1',6553748) on duplicate key update flow=6553748
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130710','head#medium#2',4032645) on duplicate key update flow=4032645
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130710','head#medium#3',4026605) on duplicate key update flow=4026605
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130710','head#medium#4',3985644) on duplicate key update flow=3985644
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130710','head#short#1',1080058) on duplicate key update flow=1080058
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130710','head#short#2',808031) on duplicate key update flow=808031
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130710','head#short#3',806709) on duplicate key update flow=806709
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130710','head#short#4',794926) on duplicate key update flow=794926
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130710','head2#*#*',3639957) on duplicate key update flow=3639957
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130710','corner#*#*',23155490) on duplicate key update flow=23155490
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130710','pause#*#*',15436993) on duplicate key update flow=15436993
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130710','trail#*#*',12864161) on duplicate key update flow=12864161
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130711','head#long#1',1482472) on duplicate key update flow=1482472
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130711','head#long#2',639204) on duplicate key update flow=639204
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130711','head#long#3',639744) on duplicate key update flow=639744
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130711','head#long#4',639562) on duplicate key update flow=639562
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130711','head#medium#1',1021508) on duplicate key update flow=1021508
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130711','head#medium#2',666234) on duplicate key update flow=666234
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130711','head#medium#3',665525) on duplicate key update flow=665525
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130711','head#medium#4',659128) on duplicate key update flow=659128
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130711','head#short#1',501906) on duplicate key update flow=501906
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130711','head#short#2',323710) on duplicate key update flow=323710
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130711','head#short#3',323662) on duplicate key update flow=323662
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130711','head#short#4',335698) on duplicate key update flow=335698
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130711','head2#*#*',3400982) on duplicate key update flow=3400982
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130711','corner#*#*',7108517) on duplicate key update flow=7108517
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130711','pause#*#*',4739011) on duplicate key update flow=4739011
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130711','trail#*#*',3949176) on duplicate key update flow=3949176
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130712','head#long#1',1606239) on duplicate key update flow=1606239
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130712','head#long#2',754202) on duplicate key update flow=754202
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130712','head#long#3',757374) on duplicate key update flow=757374
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130712','head#long#4',756691) on duplicate key update flow=756691
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130712','head#medium#1',3012605) on duplicate key update flow=3012605
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130712','head#medium#2',2090583) on duplicate key update flow=2090583
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130712','head#medium#3',2099676) on duplicate key update flow=2099676
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130712','head#medium#4',2065956) on duplicate key update flow=2065956
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130712','head#short#1',1695145) on duplicate key update flow=1695145
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130712','head#short#2',1402701) on duplicate key update flow=1402701
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130712','head#short#3',1408623) on duplicate key update flow=1408623
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130712','head#short#4',1327431) on duplicate key update flow=1327431
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130712','head2#*#*',3874506) on duplicate key update flow=3874506
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130712','corner#*#*',17079503) on duplicate key update flow=17079503
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130712','pause#*#*',11386335) on duplicate key update flow=11386335
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130712','trail#*#*',9488613) on duplicate key update flow=9488613
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130713','head#long#1',1489148) on duplicate key update flow=1489148
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130713','head#long#2',648085) on duplicate key update flow=648085
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130713','head#long#3',648738) on duplicate key update flow=648738
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130713','head#long#4',648594) on duplicate key update flow=648594
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130713','head#medium#1',2369627) on duplicate key update flow=2369627
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130713','head#medium#2',1243823) on duplicate key update flow=1243823
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130713','head#medium#3',1249645) on duplicate key update flow=1249645
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130713','head#medium#4',1247268) on duplicate key update flow=1247268
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130713','head#short#1',658329) on duplicate key update flow=658329
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130713','head#short#2',452397) on duplicate key update flow=452397
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130713','head#short#3',454854) on duplicate key update flow=454854
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130713','head#short#4',457352) on duplicate key update flow=457352
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130713','head2#*#*',3434565) on duplicate key update flow=3434565
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130713','corner#*#*',10411074) on duplicate key update flow=10411074
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130713','pause#*#*',6940716) on duplicate key update flow=6940716
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130713','trail#*#*',5783930) on duplicate key update flow=5783930
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130714','head#long#1',1942609) on duplicate key update flow=1942609
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130714','head#long#2',1026675) on duplicate key update flow=1026675
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130714','head#long#3',1027209) on duplicate key update flow=1027209
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130714','head#long#4',1026575) on duplicate key update flow=1026575
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130714','head#medium#1',6678250) on duplicate key update flow=6678250
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130714','head#medium#2',3148466) on duplicate key update flow=3148466
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130714','head#medium#3',3151909) on duplicate key update flow=3151909
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130714','head#medium#4',3145211) on duplicate key update flow=3145211
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130714','head#short#1',1196922) on duplicate key update flow=1196922
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130714','head#short#2',920731) on duplicate key update flow=920731
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130714','head#short#3',923417) on duplicate key update flow=923417
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130714','head#short#4',897422) on duplicate key update flow=897422
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130714','head2#*#*',5023068) on duplicate key update flow=5023068
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130714','corner#*#*',22576856) on duplicate key update flow=22576856
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130714','pause#*#*',15051237) on duplicate key update flow=15051237
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130714','trail#*#*',12542698) on duplicate key update flow=12542698
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130715','head#long#1',1675990) on duplicate key update flow=1675990
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130715','head#long#2',806250) on duplicate key update flow=806250
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130715','head#long#3',807012) on duplicate key update flow=807012
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130715','head#long#4',807074) on duplicate key update flow=807074
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130715','head#medium#1',7205298) on duplicate key update flow=7205298
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130715','head#medium#2',4018640) on duplicate key update flow=4018640
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130715','head#medium#3',4023364) on duplicate key update flow=4023364
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130715','head#medium#4',3982649) on duplicate key update flow=3982649
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130715','head#short#1',1410296) on duplicate key update flow=1410296
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130715','head#short#2',1111895) on duplicate key update flow=1111895
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130715','head#short#3',1114653) on duplicate key update flow=1114653
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130715','head#short#4',1090811) on duplicate key update flow=1090811
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130715','head2#*#*',4096326) on duplicate key update flow=4096326
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130715','corner#*#*',25248538) on duplicate key update flow=25248538
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130715','pause#*#*',16832359) on duplicate key update flow=16832359
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130715','trail#*#*',14026966) on duplicate key update flow=14026966
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130716','head#long#1',1549200) on duplicate key update flow=1549200
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130716','head#long#2',690386) on duplicate key update flow=690386
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130716','head#long#3',690899) on duplicate key update flow=690899
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130716','head#long#4',689739) on duplicate key update flow=689739
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130716','head#medium#1',6158463) on duplicate key update flow=6158463
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130716','head#medium#2',3050108) on duplicate key update flow=3050108
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130716','head#medium#3',3050693) on duplicate key update flow=3050693
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130716','head#medium#4',3033763) on duplicate key update flow=3033763
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130716','head#short#1',1565539) on duplicate key update flow=1565539
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130716','head#short#2',1266428) on duplicate key update flow=1266428
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130716','head#short#3',1273633) on duplicate key update flow=1273633
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130716','head#short#4',1237110) on duplicate key update flow=1237110
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130716','head2#*#*',3620224) on duplicate key update flow=3620224
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130716','corner#*#*',21830364) on duplicate key update flow=21830364
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130716','pause#*#*',14553576) on duplicate key update flow=14553576
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130716','trail#*#*',12127980) on duplicate key update flow=12127980
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130717','head#long#1',1559255) on duplicate key update flow=1559255
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130717','head#long#2',693105) on duplicate key update flow=693105
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130717','head#long#3',693608) on duplicate key update flow=693608
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130717','head#long#4',693989) on duplicate key update flow=693989
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130717','head#medium#1',6553748) on duplicate key update flow=6553748
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130717','head#medium#2',4032645) on duplicate key update flow=4032645
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130717','head#medium#3',4026605) on duplicate key update flow=4026605
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130717','head#medium#4',3985644) on duplicate key update flow=3985644
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130717','head#short#1',1080058) on duplicate key update flow=1080058
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130717','head#short#2',808031) on duplicate key update flow=808031
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130717','head#short#3',806709) on duplicate key update flow=806709
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130717','head#short#4',794926) on duplicate key update flow=794926
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130717','head2#*#*',3639957) on duplicate key update flow=3639957
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130717','corner#*#*',23155490) on duplicate key update flow=23155490
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130717','pause#*#*',15436993) on duplicate key update flow=15436993
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130717','trail#*#*',12864161) on duplicate key update flow=12864161
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130718','head#long#1',1482472) on duplicate key update flow=1482472
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130718','head#long#2',639204) on duplicate key update flow=639204
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130718','head#long#3',639744) on duplicate key update flow=639744
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130718','head#long#4',639562) on duplicate key update flow=639562
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130718','head#medium#1',1021508) on duplicate key update flow=1021508
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130718','head#medium#2',666234) on duplicate key update flow=666234
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130718','head#medium#3',665525) on duplicate key update flow=665525
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130718','head#medium#4',659128) on duplicate key update flow=659128
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130718','head#short#1',501906) on duplicate key update flow=501906
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130718','head#short#2',323710) on duplicate key update flow=323710
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130718','head#short#3',323662) on duplicate key update flow=323662
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130718','head#short#4',335698) on duplicate key update flow=335698
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130718','head2#*#*',3400982) on duplicate key update flow=3400982
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130718','corner#*#*',7108517) on duplicate key update flow=7108517
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130718','pause#*#*',4739011) on duplicate key update flow=4739011
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130718','trail#*#*',3949176) on duplicate key update flow=3949176
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130719','head#long#1',1606239) on duplicate key update flow=1606239
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130719','head#long#2',754202) on duplicate key update flow=754202
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130719','head#long#3',757374) on duplicate key update flow=757374
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130719','head#long#4',756691) on duplicate key update flow=756691
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130719','head#medium#1',3012605) on duplicate key update flow=3012605
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130719','head#medium#2',2090583) on duplicate key update flow=2090583
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130719','head#medium#3',2099676) on duplicate key update flow=2099676
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130719','head#medium#4',2065956) on duplicate key update flow=2065956
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130719','head#short#1',1695145) on duplicate key update flow=1695145
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130719','head#short#2',1402701) on duplicate key update flow=1402701
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130719','head#short#3',1408623) on duplicate key update flow=1408623
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130719','head#short#4',1327431) on duplicate key update flow=1327431
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130719','head2#*#*',3874506) on duplicate key update flow=3874506
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130719','corner#*#*',17079503) on duplicate key update flow=17079503
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130719','pause#*#*',11386335) on duplicate key update flow=11386335
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130719','trail#*#*',9488613) on duplicate key update flow=9488613
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130720','head#long#1',1489148) on duplicate key update flow=1489148
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130720','head#long#2',648085) on duplicate key update flow=648085
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130720','head#long#3',648738) on duplicate key update flow=648738
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130720','head#long#4',648594) on duplicate key update flow=648594
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130720','head#medium#1',2369627) on duplicate key update flow=2369627
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130720','head#medium#2',1243823) on duplicate key update flow=1243823
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130720','head#medium#3',1249645) on duplicate key update flow=1249645
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130720','head#medium#4',1247268) on duplicate key update flow=1247268
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130720','head#short#1',658329) on duplicate key update flow=658329
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130720','head#short#2',452397) on duplicate key update flow=452397
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130720','head#short#3',454854) on duplicate key update flow=454854
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130720','head#short#4',457352) on duplicate key update flow=457352
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130720','head2#*#*',3434565) on duplicate key update flow=3434565
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130720','corner#*#*',10411074) on duplicate key update flow=10411074
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130720','pause#*#*',6940716) on duplicate key update flow=6940716
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130720','trail#*#*',5783930) on duplicate key update flow=5783930
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130721','head#long#1',1942609) on duplicate key update flow=1942609
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130721','head#long#2',1026675) on duplicate key update flow=1026675
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130721','head#long#3',1027209) on duplicate key update flow=1027209
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130721','head#long#4',1026575) on duplicate key update flow=1026575
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130721','head#medium#1',6678250) on duplicate key update flow=6678250
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130721','head#medium#2',3148466) on duplicate key update flow=3148466
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130721','head#medium#3',3151909) on duplicate key update flow=3151909
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130721','head#medium#4',3145211) on duplicate key update flow=3145211
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130721','head#short#1',1196922) on duplicate key update flow=1196922
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130721','head#short#2',920731) on duplicate key update flow=920731
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130721','head#short#3',923417) on duplicate key update flow=923417
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130721','head#short#4',897422) on duplicate key update flow=897422
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130721','head2#*#*',5023068) on duplicate key update flow=5023068
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130721','corner#*#*',22576856) on duplicate key update flow=22576856
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130721','pause#*#*',15051237) on duplicate key update flow=15051237
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130721','trail#*#*',12542698) on duplicate key update flow=12542698
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130722','head#long#1',1675990) on duplicate key update flow=1675990
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130722','head#long#2',806250) on duplicate key update flow=806250
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130722','head#long#3',807012) on duplicate key update flow=807012
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130722','head#long#4',807074) on duplicate key update flow=807074
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130722','head#medium#1',7205298) on duplicate key update flow=7205298
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130722','head#medium#2',4018640) on duplicate key update flow=4018640
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130722','head#medium#3',4023364) on duplicate key update flow=4023364
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130722','head#medium#4',3982649) on duplicate key update flow=3982649
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130722','head#short#1',1410296) on duplicate key update flow=1410296
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130722','head#short#2',1111895) on duplicate key update flow=1111895
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130722','head#short#3',1114653) on duplicate key update flow=1114653
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130722','head#short#4',1090811) on duplicate key update flow=1090811
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130722','head2#*#*',4096326) on duplicate key update flow=4096326
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130722','corner#*#*',25248538) on duplicate key update flow=25248538
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130722','pause#*#*',16832359) on duplicate key update flow=16832359
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130722','trail#*#*',14026966) on duplicate key update flow=14026966
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130723','head#long#1',1549200) on duplicate key update flow=1549200
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130723','head#long#2',690386) on duplicate key update flow=690386
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130723','head#long#3',690899) on duplicate key update flow=690899
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130723','head#long#4',689739) on duplicate key update flow=689739
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130723','head#medium#1',6158463) on duplicate key update flow=6158463
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130723','head#medium#2',3050108) on duplicate key update flow=3050108
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130723','head#medium#3',3050693) on duplicate key update flow=3050693
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130723','head#medium#4',3033763) on duplicate key update flow=3033763
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130723','head#short#1',1565539) on duplicate key update flow=1565539
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130723','head#short#2',1266428) on duplicate key update flow=1266428
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130723','head#short#3',1273633) on duplicate key update flow=1273633
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130723','head#short#4',1237110) on duplicate key update flow=1237110
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130723','head2#*#*',3620224) on duplicate key update flow=3620224
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130723','corner#*#*',21830364) on duplicate key update flow=21830364
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130723','pause#*#*',14553576) on duplicate key update flow=14553576
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130723','trail#*#*',12127980) on duplicate key update flow=12127980
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130724','head#long#1',1559255) on duplicate key update flow=1559255
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130724','head#long#2',693105) on duplicate key update flow=693105
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130724','head#long#3',693608) on duplicate key update flow=693608
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130724','head#long#4',693989) on duplicate key update flow=693989
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130724','head#medium#1',6553748) on duplicate key update flow=6553748
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130724','head#medium#2',4032645) on duplicate key update flow=4032645
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130724','head#medium#3',4026605) on duplicate key update flow=4026605
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130724','head#medium#4',3985644) on duplicate key update flow=3985644
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130724','head#short#1',1080058) on duplicate key update flow=1080058
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130724','head#short#2',808031) on duplicate key update flow=808031
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130724','head#short#3',806709) on duplicate key update flow=806709
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130724','head#short#4',794926) on duplicate key update flow=794926
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130724','head2#*#*',3639957) on duplicate key update flow=3639957
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130724','corner#*#*',23155490) on duplicate key update flow=23155490
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130724','pause#*#*',15436993) on duplicate key update flow=15436993
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130724','trail#*#*',12864161) on duplicate key update flow=12864161
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130725','head#long#1',1482472) on duplicate key update flow=1482472
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130725','head#long#2',639204) on duplicate key update flow=639204
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130725','head#long#3',639744) on duplicate key update flow=639744
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130725','head#long#4',639562) on duplicate key update flow=639562
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130725','head#medium#1',1021508) on duplicate key update flow=1021508
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130725','head#medium#2',666234) on duplicate key update flow=666234
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130725','head#medium#3',665525) on duplicate key update flow=665525
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130725','head#medium#4',659128) on duplicate key update flow=659128
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130725','head#short#1',501906) on duplicate key update flow=501906
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130725','head#short#2',323710) on duplicate key update flow=323710
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130725','head#short#3',323662) on duplicate key update flow=323662
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130725','head#short#4',335698) on duplicate key update flow=335698
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130725','head2#*#*',3400982) on duplicate key update flow=3400982
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130725','corner#*#*',7108517) on duplicate key update flow=7108517
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130725','pause#*#*',4739011) on duplicate key update flow=4739011
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130725','trail#*#*',3949176) on duplicate key update flow=3949176
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130726','head#long#1',1606239) on duplicate key update flow=1606239
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130726','head#long#2',754202) on duplicate key update flow=754202
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130726','head#long#3',757374) on duplicate key update flow=757374
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130726','head#long#4',756691) on duplicate key update flow=756691
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130726','head#medium#1',3012605) on duplicate key update flow=3012605
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130726','head#medium#2',2090583) on duplicate key update flow=2090583
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130726','head#medium#3',2099676) on duplicate key update flow=2099676
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130726','head#medium#4',2065956) on duplicate key update flow=2065956
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130726','head#short#1',1695145) on duplicate key update flow=1695145
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130726','head#short#2',1402701) on duplicate key update flow=1402701
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130726','head#short#3',1408623) on duplicate key update flow=1408623
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130726','head#short#4',1327431) on duplicate key update flow=1327431
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130726','head2#*#*',3874506) on duplicate key update flow=3874506
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130726','corner#*#*',17079503) on duplicate key update flow=17079503
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130726','pause#*#*',11386335) on duplicate key update flow=11386335
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130726','trail#*#*',9488613) on duplicate key update flow=9488613
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130727','head#long#1',1489148) on duplicate key update flow=1489148
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130727','head#long#2',648085) on duplicate key update flow=648085
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130727','head#long#3',648738) on duplicate key update flow=648738
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130727','head#long#4',648594) on duplicate key update flow=648594
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130727','head#medium#1',2369627) on duplicate key update flow=2369627
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130727','head#medium#2',1243823) on duplicate key update flow=1243823
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130727','head#medium#3',1249645) on duplicate key update flow=1249645
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130727','head#medium#4',1247268) on duplicate key update flow=1247268
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130727','head#short#1',658329) on duplicate key update flow=658329
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130727','head#short#2',452397) on duplicate key update flow=452397
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130727','head#short#3',454854) on duplicate key update flow=454854
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130727','head#short#4',457352) on duplicate key update flow=457352
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130727','head2#*#*',3434565) on duplicate key update flow=3434565
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130727','corner#*#*',10411074) on duplicate key update flow=10411074
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130727','pause#*#*',6940716) on duplicate key update flow=6940716
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130727','trail#*#*',5783930) on duplicate key update flow=5783930
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130728','head#long#1',1942609) on duplicate key update flow=1942609
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130728','head#long#2',1026675) on duplicate key update flow=1026675
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130728','head#long#3',1027209) on duplicate key update flow=1027209
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130728','head#long#4',1026575) on duplicate key update flow=1026575
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130728','head#medium#1',6678250) on duplicate key update flow=6678250
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130728','head#medium#2',3148466) on duplicate key update flow=3148466
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130728','head#medium#3',3151909) on duplicate key update flow=3151909
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130728','head#medium#4',3145211) on duplicate key update flow=3145211
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130728','head#short#1',1196922) on duplicate key update flow=1196922
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130728','head#short#2',920731) on duplicate key update flow=920731
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130728','head#short#3',923417) on duplicate key update flow=923417
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130728','head#short#4',897422) on duplicate key update flow=897422
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130728','head2#*#*',5023068) on duplicate key update flow=5023068
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130728','corner#*#*',22576856) on duplicate key update flow=22576856
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130728','pause#*#*',15051237) on duplicate key update flow=15051237
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130728','trail#*#*',12542698) on duplicate key update flow=12542698
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130729','head#long#1',1675990) on duplicate key update flow=1675990
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130729','head#long#2',806250) on duplicate key update flow=806250
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130729','head#long#3',807012) on duplicate key update flow=807012
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130729','head#long#4',807074) on duplicate key update flow=807074
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130729','head#medium#1',7205298) on duplicate key update flow=7205298
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130729','head#medium#2',4018640) on duplicate key update flow=4018640
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130729','head#medium#3',4023364) on duplicate key update flow=4023364
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130729','head#medium#4',3982649) on duplicate key update flow=3982649
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130729','head#short#1',1410296) on duplicate key update flow=1410296
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130729','head#short#2',1111895) on duplicate key update flow=1111895
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130729','head#short#3',1114653) on duplicate key update flow=1114653
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130729','head#short#4',1090811) on duplicate key update flow=1090811
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130729','head2#*#*',4096326) on duplicate key update flow=4096326
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130729','corner#*#*',25248538) on duplicate key update flow=25248538
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130729','pause#*#*',16832359) on duplicate key update flow=16832359
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130729','trail#*#*',14026966) on duplicate key update flow=14026966
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130730','head#long#1',1549200) on duplicate key update flow=1549200
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130730','head#long#2',690386) on duplicate key update flow=690386
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130730','head#long#3',690899) on duplicate key update flow=690899
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130730','head#long#4',689739) on duplicate key update flow=689739
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130730','head#medium#1',6158463) on duplicate key update flow=6158463
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130730','head#medium#2',3050108) on duplicate key update flow=3050108
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130730','head#medium#3',3050693) on duplicate key update flow=3050693
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130730','head#medium#4',3033763) on duplicate key update flow=3033763
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130730','head#short#1',1565539) on duplicate key update flow=1565539
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130730','head#short#2',1266428) on duplicate key update flow=1266428
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130730','head#short#3',1273633) on duplicate key update flow=1273633
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130730','head#short#4',1237110) on duplicate key update flow=1237110
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130730','head2#*#*',3620224) on duplicate key update flow=3620224
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130730','corner#*#*',21830364) on duplicate key update flow=21830364
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130730','pause#*#*',14553576) on duplicate key update flow=14553576
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130730','trail#*#*',12127980) on duplicate key update flow=12127980
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130731','head#long#1',1559255) on duplicate key update flow=1559255
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130731','head#long#2',693105) on duplicate key update flow=693105
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130731','head#long#3',693608) on duplicate key update flow=693608
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130731','head#long#4',693989) on duplicate key update flow=693989
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130731','head#medium#1',6553748) on duplicate key update flow=6553748
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130731','head#medium#2',4032645) on duplicate key update flow=4032645
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130731','head#medium#3',4026605) on duplicate key update flow=4026605
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130731','head#medium#4',3985644) on duplicate key update flow=3985644
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130731','head#short#1',1080058) on duplicate key update flow=1080058
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130731','head#short#2',808031) on duplicate key update flow=808031
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130731','head#short#3',806709) on duplicate key update flow=806709
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130731','head#short#4',794926) on duplicate key update flow=794926
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130731','head2#*#*',3639957) on duplicate key update flow=3639957
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130731','corner#*#*',23155490) on duplicate key update flow=23155490
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130731','pause#*#*',15436993) on duplicate key update flow=15436993
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130731','trail#*#*',12864161) on duplicate key update flow=12864161
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130801','head#long#1',1482472) on duplicate key update flow=1482472
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130801','head#long#2',639204) on duplicate key update flow=639204
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130801','head#long#3',639744) on duplicate key update flow=639744
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130801','head#long#4',639562) on duplicate key update flow=639562
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130801','head#medium#1',1021508) on duplicate key update flow=1021508
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130801','head#medium#2',666234) on duplicate key update flow=666234
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130801','head#medium#3',665525) on duplicate key update flow=665525
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130801','head#medium#4',659128) on duplicate key update flow=659128
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130801','head#short#1',501906) on duplicate key update flow=501906
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130801','head#short#2',323710) on duplicate key update flow=323710
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130801','head#short#3',323662) on duplicate key update flow=323662
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130801','head#short#4',335698) on duplicate key update flow=335698
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130801','head2#*#*',3400982) on duplicate key update flow=3400982
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130801','corner#*#*',7108517) on duplicate key update flow=7108517
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130801','pause#*#*',4739011) on duplicate key update flow=4739011
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130801','trail#*#*',3949176) on duplicate key update flow=3949176
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130802','head#long#1',1606239) on duplicate key update flow=1606239
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130802','head#long#2',754202) on duplicate key update flow=754202
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130802','head#long#3',757374) on duplicate key update flow=757374
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130802','head#long#4',756691) on duplicate key update flow=756691
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130802','head#medium#1',3012605) on duplicate key update flow=3012605
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130802','head#medium#2',2090583) on duplicate key update flow=2090583
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130802','head#medium#3',2099676) on duplicate key update flow=2099676
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130802','head#medium#4',2065956) on duplicate key update flow=2065956
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130802','head#short#1',1695145) on duplicate key update flow=1695145
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130802','head#short#2',1402701) on duplicate key update flow=1402701
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130802','head#short#3',1408623) on duplicate key update flow=1408623
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130802','head#short#4',1327431) on duplicate key update flow=1327431
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130802','head2#*#*',3874506) on duplicate key update flow=3874506
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130802','corner#*#*',17079503) on duplicate key update flow=17079503
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130802','pause#*#*',11386335) on duplicate key update flow=11386335
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130802','trail#*#*',9488613) on duplicate key update flow=9488613
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130803','head#long#1',1489148) on duplicate key update flow=1489148
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130803','head#long#2',648085) on duplicate key update flow=648085
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130803','head#long#3',648738) on duplicate key update flow=648738
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130803','head#long#4',648594) on duplicate key update flow=648594
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130803','head#medium#1',2369627) on duplicate key update flow=2369627
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130803','head#medium#2',1243823) on duplicate key update flow=1243823
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130803','head#medium#3',1249645) on duplicate key update flow=1249645
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130803','head#medium#4',1247268) on duplicate key update flow=1247268
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130803','head#short#1',658329) on duplicate key update flow=658329
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130803','head#short#2',452397) on duplicate key update flow=452397
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130803','head#short#3',454854) on duplicate key update flow=454854
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130803','head#short#4',457352) on duplicate key update flow=457352
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130803','head2#*#*',3434565) on duplicate key update flow=3434565
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130803','corner#*#*',10411074) on duplicate key update flow=10411074
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130803','pause#*#*',6940716) on duplicate key update flow=6940716
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130803','trail#*#*',5783930) on duplicate key update flow=5783930
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130804','head#long#1',1942609) on duplicate key update flow=1942609
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130804','head#long#2',1026675) on duplicate key update flow=1026675
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130804','head#long#3',1027209) on duplicate key update flow=1027209
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130804','head#long#4',1026575) on duplicate key update flow=1026575
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130804','head#medium#1',6678250) on duplicate key update flow=6678250
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130804','head#medium#2',3148466) on duplicate key update flow=3148466
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130804','head#medium#3',3151909) on duplicate key update flow=3151909
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130804','head#medium#4',3145211) on duplicate key update flow=3145211
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130804','head#short#1',1196922) on duplicate key update flow=1196922
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130804','head#short#2',920731) on duplicate key update flow=920731
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130804','head#short#3',923417) on duplicate key update flow=923417
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130804','head#short#4',897422) on duplicate key update flow=897422
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130804','head2#*#*',5023068) on duplicate key update flow=5023068
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130804','corner#*#*',22576856) on duplicate key update flow=22576856
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130804','pause#*#*',15051237) on duplicate key update flow=15051237
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130804','trail#*#*',12542698) on duplicate key update flow=12542698
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130805','head#long#1',1675990) on duplicate key update flow=1675990
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130805','head#long#2',806250) on duplicate key update flow=806250
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130805','head#long#3',807012) on duplicate key update flow=807012
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130805','head#long#4',807074) on duplicate key update flow=807074
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130805','head#medium#1',7205298) on duplicate key update flow=7205298
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130805','head#medium#2',4018640) on duplicate key update flow=4018640
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130805','head#medium#3',4023364) on duplicate key update flow=4023364
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130805','head#medium#4',3982649) on duplicate key update flow=3982649
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130805','head#short#1',1410296) on duplicate key update flow=1410296
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130805','head#short#2',1111895) on duplicate key update flow=1111895
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130805','head#short#3',1114653) on duplicate key update flow=1114653
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130805','head#short#4',1090811) on duplicate key update flow=1090811
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130805','head2#*#*',4096326) on duplicate key update flow=4096326
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130805','corner#*#*',25248538) on duplicate key update flow=25248538
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130805','pause#*#*',16832359) on duplicate key update flow=16832359
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130805','trail#*#*',14026966) on duplicate key update flow=14026966
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130806','head#long#1',1549200) on duplicate key update flow=1549200
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130806','head#long#2',690386) on duplicate key update flow=690386
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130806','head#long#3',690899) on duplicate key update flow=690899
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130806','head#long#4',689739) on duplicate key update flow=689739
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130806','head#medium#1',6158463) on duplicate key update flow=6158463
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130806','head#medium#2',3050108) on duplicate key update flow=3050108
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130806','head#medium#3',3050693) on duplicate key update flow=3050693
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130806','head#medium#4',3033763) on duplicate key update flow=3033763
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130806','head#short#1',1565539) on duplicate key update flow=1565539
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130806','head#short#2',1266428) on duplicate key update flow=1266428
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130806','head#short#3',1273633) on duplicate key update flow=1273633
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130806','head#short#4',1237110) on duplicate key update flow=1237110
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130806','head2#*#*',3620224) on duplicate key update flow=3620224
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130806','corner#*#*',21830364) on duplicate key update flow=21830364
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130806','pause#*#*',14553576) on duplicate key update flow=14553576
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130806','trail#*#*',12127980) on duplicate key update flow=12127980
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130807','head#long#1',1559255) on duplicate key update flow=1559255
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130807','head#long#2',693105) on duplicate key update flow=693105
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130807','head#long#3',693608) on duplicate key update flow=693608
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130807','head#long#4',693989) on duplicate key update flow=693989
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130807','head#medium#1',6553748) on duplicate key update flow=6553748
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130807','head#medium#2',4032645) on duplicate key update flow=4032645
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130807','head#medium#3',4026605) on duplicate key update flow=4026605
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130807','head#medium#4',3985644) on duplicate key update flow=3985644
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130807','head#short#1',1080058) on duplicate key update flow=1080058
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130807','head#short#2',808031) on duplicate key update flow=808031
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130807','head#short#3',806709) on duplicate key update flow=806709
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130807','head#short#4',794926) on duplicate key update flow=794926
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130807','head2#*#*',3639957) on duplicate key update flow=3639957
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130807','corner#*#*',23155490) on duplicate key update flow=23155490
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130807','pause#*#*',15436993) on duplicate key update flow=15436993
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130807','trail#*#*',12864161) on duplicate key update flow=12864161
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130808','head#long#1',1482472) on duplicate key update flow=1482472
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130808','head#long#2',639204) on duplicate key update flow=639204
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130808','head#long#3',639744) on duplicate key update flow=639744
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130808','head#long#4',639562) on duplicate key update flow=639562
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130808','head#medium#1',1021508) on duplicate key update flow=1021508
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130808','head#medium#2',666234) on duplicate key update flow=666234
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130808','head#medium#3',665525) on duplicate key update flow=665525
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130808','head#medium#4',659128) on duplicate key update flow=659128
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130808','head#short#1',501906) on duplicate key update flow=501906
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130808','head#short#2',323710) on duplicate key update flow=323710
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130808','head#short#3',323662) on duplicate key update flow=323662
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130808','head#short#4',335698) on duplicate key update flow=335698
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130808','head2#*#*',3400982) on duplicate key update flow=3400982
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130808','corner#*#*',7108517) on duplicate key update flow=7108517
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130808','pause#*#*',4739011) on duplicate key update flow=4739011
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130808','trail#*#*',3949176) on duplicate key update flow=3949176
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130809','head#long#1',1606239) on duplicate key update flow=1606239
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130809','head#long#2',754202) on duplicate key update flow=754202
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130809','head#long#3',757374) on duplicate key update flow=757374
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130809','head#long#4',756691) on duplicate key update flow=756691
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130809','head#medium#1',3012605) on duplicate key update flow=3012605
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130809','head#medium#2',2090583) on duplicate key update flow=2090583
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130809','head#medium#3',2099676) on duplicate key update flow=2099676
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130809','head#medium#4',2065956) on duplicate key update flow=2065956
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130809','head#short#1',1695145) on duplicate key update flow=1695145
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130809','head#short#2',1402701) on duplicate key update flow=1402701
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130809','head#short#3',1408623) on duplicate key update flow=1408623
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130809','head#short#4',1327431) on duplicate key update flow=1327431
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130809','head2#*#*',3874506) on duplicate key update flow=3874506
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130809','corner#*#*',17079503) on duplicate key update flow=17079503
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130809','pause#*#*',11386335) on duplicate key update flow=11386335
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130809','trail#*#*',9488613) on duplicate key update flow=9488613
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130810','head#long#1',1489148) on duplicate key update flow=1489148
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130810','head#long#2',648085) on duplicate key update flow=648085
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130810','head#long#3',648738) on duplicate key update flow=648738
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130810','head#long#4',648594) on duplicate key update flow=648594
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130810','head#medium#1',2369627) on duplicate key update flow=2369627
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130810','head#medium#2',1243823) on duplicate key update flow=1243823
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130810','head#medium#3',1249645) on duplicate key update flow=1249645
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130810','head#medium#4',1247268) on duplicate key update flow=1247268
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130810','head#short#1',658329) on duplicate key update flow=658329
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130810','head#short#2',452397) on duplicate key update flow=452397
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130810','head#short#3',454854) on duplicate key update flow=454854
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130810','head#short#4',457352) on duplicate key update flow=457352
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130810','head2#*#*',3434565) on duplicate key update flow=3434565
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130810','corner#*#*',10411074) on duplicate key update flow=10411074
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130810','pause#*#*',6940716) on duplicate key update flow=6940716
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130810','trail#*#*',5783930) on duplicate key update flow=5783930
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130811','head#long#1',1942609) on duplicate key update flow=1942609
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130811','head#long#2',1026675) on duplicate key update flow=1026675
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130811','head#long#3',1027209) on duplicate key update flow=1027209
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130811','head#long#4',1026575) on duplicate key update flow=1026575
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130811','head#medium#1',6678250) on duplicate key update flow=6678250
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130811','head#medium#2',3148466) on duplicate key update flow=3148466
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130811','head#medium#3',3151909) on duplicate key update flow=3151909
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130811','head#medium#4',3145211) on duplicate key update flow=3145211
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130811','head#short#1',1196922) on duplicate key update flow=1196922
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130811','head#short#2',920731) on duplicate key update flow=920731
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130811','head#short#3',923417) on duplicate key update flow=923417
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130811','head#short#4',897422) on duplicate key update flow=897422
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130811','head2#*#*',5023068) on duplicate key update flow=5023068
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130811','corner#*#*',22576856) on duplicate key update flow=22576856
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130811','pause#*#*',15051237) on duplicate key update flow=15051237
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130811','trail#*#*',12542698) on duplicate key update flow=12542698
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130812','head#long#1',1675990) on duplicate key update flow=1675990
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130812','head#long#2',806250) on duplicate key update flow=806250
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130812','head#long#3',807012) on duplicate key update flow=807012
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130812','head#long#4',807074) on duplicate key update flow=807074
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130812','head#medium#1',7205298) on duplicate key update flow=7205298
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130812','head#medium#2',4018640) on duplicate key update flow=4018640
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130812','head#medium#3',4023364) on duplicate key update flow=4023364
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130812','head#medium#4',3982649) on duplicate key update flow=3982649
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130812','head#short#1',1410296) on duplicate key update flow=1410296
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130812','head#short#2',1111895) on duplicate key update flow=1111895
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130812','head#short#3',1114653) on duplicate key update flow=1114653
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130812','head#short#4',1090811) on duplicate key update flow=1090811
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130812','head2#*#*',4096326) on duplicate key update flow=4096326
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130812','corner#*#*',25248538) on duplicate key update flow=25248538
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130812','pause#*#*',16832359) on duplicate key update flow=16832359
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130812','trail#*#*',14026966) on duplicate key update flow=14026966
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130813','head#long#1',1549200) on duplicate key update flow=1549200
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130813','head#long#2',690386) on duplicate key update flow=690386
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130813','head#long#3',690899) on duplicate key update flow=690899
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130813','head#long#4',689739) on duplicate key update flow=689739
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130813','head#medium#1',6158463) on duplicate key update flow=6158463
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130813','head#medium#2',3050108) on duplicate key update flow=3050108
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130813','head#medium#3',3050693) on duplicate key update flow=3050693
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130813','head#medium#4',3033763) on duplicate key update flow=3033763
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130813','head#short#1',1565539) on duplicate key update flow=1565539
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130813','head#short#2',1266428) on duplicate key update flow=1266428
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130813','head#short#3',1273633) on duplicate key update flow=1273633
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130813','head#short#4',1237110) on duplicate key update flow=1237110
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130813','head2#*#*',3620224) on duplicate key update flow=3620224
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130813','corner#*#*',21830364) on duplicate key update flow=21830364
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130813','pause#*#*',14553576) on duplicate key update flow=14553576
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130813','trail#*#*',12127980) on duplicate key update flow=12127980
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130814','head#long#1',1559255) on duplicate key update flow=1559255
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130814','head#long#2',693105) on duplicate key update flow=693105
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130814','head#long#3',693608) on duplicate key update flow=693608
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130814','head#long#4',693989) on duplicate key update flow=693989
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130814','head#medium#1',6553748) on duplicate key update flow=6553748
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130814','head#medium#2',4032645) on duplicate key update flow=4032645
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130814','head#medium#3',4026605) on duplicate key update flow=4026605
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130814','head#medium#4',3985644) on duplicate key update flow=3985644
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130814','head#short#1',1080058) on duplicate key update flow=1080058
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130814','head#short#2',808031) on duplicate key update flow=808031
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130814','head#short#3',806709) on duplicate key update flow=806709
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130814','head#short#4',794926) on duplicate key update flow=794926
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130814','head2#*#*',3639957) on duplicate key update flow=3639957
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130814','corner#*#*',23155490) on duplicate key update flow=23155490
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130814','pause#*#*',15436993) on duplicate key update flow=15436993
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130814','trail#*#*',12864161) on duplicate key update flow=12864161
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130815','head#long#1',1482472) on duplicate key update flow=1482472
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130815','head#long#2',639204) on duplicate key update flow=639204
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130815','head#long#3',639744) on duplicate key update flow=639744
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130815','head#long#4',639562) on duplicate key update flow=639562
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130815','head#medium#1',1021508) on duplicate key update flow=1021508
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130815','head#medium#2',666234) on duplicate key update flow=666234
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130815','head#medium#3',665525) on duplicate key update flow=665525
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130815','head#medium#4',659128) on duplicate key update flow=659128
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130815','head#short#1',501906) on duplicate key update flow=501906
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130815','head#short#2',323710) on duplicate key update flow=323710
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130815','head#short#3',323662) on duplicate key update flow=323662
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130815','head#short#4',335698) on duplicate key update flow=335698
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130815','head2#*#*',3400982) on duplicate key update flow=3400982
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130815','corner#*#*',7108517) on duplicate key update flow=7108517
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130815','pause#*#*',4739011) on duplicate key update flow=4739011
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130815','trail#*#*',3949176) on duplicate key update flow=3949176
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130816','head#long#1',1606239) on duplicate key update flow=1606239
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130816','head#long#2',754202) on duplicate key update flow=754202
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130816','head#long#3',757374) on duplicate key update flow=757374
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130816','head#long#4',756691) on duplicate key update flow=756691
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130816','head#medium#1',3012605) on duplicate key update flow=3012605
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130816','head#medium#2',2090583) on duplicate key update flow=2090583
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130816','head#medium#3',2099676) on duplicate key update flow=2099676
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130816','head#medium#4',2065956) on duplicate key update flow=2065956
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130816','head#short#1',1695145) on duplicate key update flow=1695145
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130816','head#short#2',1402701) on duplicate key update flow=1402701
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130816','head#short#3',1408623) on duplicate key update flow=1408623
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130816','head#short#4',1327431) on duplicate key update flow=1327431
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130816','head2#*#*',3874506) on duplicate key update flow=3874506
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130816','corner#*#*',17079503) on duplicate key update flow=17079503
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130816','pause#*#*',11386335) on duplicate key update flow=11386335
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130816','trail#*#*',9488613) on duplicate key update flow=9488613
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130817','head#long#1',1489148) on duplicate key update flow=1489148
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130817','head#long#2',648085) on duplicate key update flow=648085
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130817','head#long#3',648738) on duplicate key update flow=648738
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130817','head#long#4',648594) on duplicate key update flow=648594
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130817','head#medium#1',2369627) on duplicate key update flow=2369627
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130817','head#medium#2',1243823) on duplicate key update flow=1243823
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130817','head#medium#3',1249645) on duplicate key update flow=1249645
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130817','head#medium#4',1247268) on duplicate key update flow=1247268
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130817','head#short#1',658329) on duplicate key update flow=658329
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130817','head#short#2',452397) on duplicate key update flow=452397
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130817','head#short#3',454854) on duplicate key update flow=454854
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130817','head#short#4',457352) on duplicate key update flow=457352
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130817','head2#*#*',3434565) on duplicate key update flow=3434565
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130817','corner#*#*',10411074) on duplicate key update flow=10411074
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130817','pause#*#*',6940716) on duplicate key update flow=6940716
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130817','trail#*#*',5783930) on duplicate key update flow=5783930
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130818','head#long#1',1942609) on duplicate key update flow=1942609
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130818','head#long#2',1026675) on duplicate key update flow=1026675
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130818','head#long#3',1027209) on duplicate key update flow=1027209
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130818','head#long#4',1026575) on duplicate key update flow=1026575
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130818','head#medium#1',6678250) on duplicate key update flow=6678250
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130818','head#medium#2',3148466) on duplicate key update flow=3148466
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130818','head#medium#3',3151909) on duplicate key update flow=3151909
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130818','head#medium#4',3145211) on duplicate key update flow=3145211
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130818','head#short#1',1196922) on duplicate key update flow=1196922
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130818','head#short#2',920731) on duplicate key update flow=920731
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130818','head#short#3',923417) on duplicate key update flow=923417
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130818','head#short#4',897422) on duplicate key update flow=897422
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130818','head2#*#*',5023068) on duplicate key update flow=5023068
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130818','corner#*#*',22576856) on duplicate key update flow=22576856
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130818','pause#*#*',15051237) on duplicate key update flow=15051237
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130818','trail#*#*',12542698) on duplicate key update flow=12542698
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130819','head#long#1',1675990) on duplicate key update flow=1675990
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130819','head#long#2',806250) on duplicate key update flow=806250
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130819','head#long#3',807012) on duplicate key update flow=807012
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130819','head#long#4',807074) on duplicate key update flow=807074
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130819','head#medium#1',7205298) on duplicate key update flow=7205298
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130819','head#medium#2',4018640) on duplicate key update flow=4018640
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130819','head#medium#3',4023364) on duplicate key update flow=4023364
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130819','head#medium#4',3982649) on duplicate key update flow=3982649
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130819','head#short#1',1410296) on duplicate key update flow=1410296
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130819','head#short#2',1111895) on duplicate key update flow=1111895
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130819','head#short#3',1114653) on duplicate key update flow=1114653
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130819','head#short#4',1090811) on duplicate key update flow=1090811
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130819','head2#*#*',4096326) on duplicate key update flow=4096326
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130819','corner#*#*',25248538) on duplicate key update flow=25248538
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130819','pause#*#*',16832359) on duplicate key update flow=16832359
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130819','trail#*#*',14026966) on duplicate key update flow=14026966
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130820','head#long#1',1549200) on duplicate key update flow=1549200
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130820','head#long#2',690386) on duplicate key update flow=690386
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130820','head#long#3',690899) on duplicate key update flow=690899
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130820','head#long#4',689739) on duplicate key update flow=689739
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130820','head#medium#1',6158463) on duplicate key update flow=6158463
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130820','head#medium#2',3050108) on duplicate key update flow=3050108
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130820','head#medium#3',3050693) on duplicate key update flow=3050693
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130820','head#medium#4',3033763) on duplicate key update flow=3033763
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130820','head#short#1',1565539) on duplicate key update flow=1565539
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130820','head#short#2',1266428) on duplicate key update flow=1266428
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130820','head#short#3',1273633) on duplicate key update flow=1273633
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130820','head#short#4',1237110) on duplicate key update flow=1237110
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130820','head2#*#*',3620224) on duplicate key update flow=3620224
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130820','corner#*#*',21830364) on duplicate key update flow=21830364
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130820','pause#*#*',14553576) on duplicate key update flow=14553576
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130820','trail#*#*',12127980) on duplicate key update flow=12127980
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130821','head#long#1',1559255) on duplicate key update flow=1559255
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130821','head#long#2',693105) on duplicate key update flow=693105
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130821','head#long#3',693608) on duplicate key update flow=693608
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130821','head#long#4',693989) on duplicate key update flow=693989
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130821','head#medium#1',6553748) on duplicate key update flow=6553748
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130821','head#medium#2',4032645) on duplicate key update flow=4032645
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130821','head#medium#3',4026605) on duplicate key update flow=4026605
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130821','head#medium#4',3985644) on duplicate key update flow=3985644
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130821','head#short#1',1080058) on duplicate key update flow=1080058
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130821','head#short#2',808031) on duplicate key update flow=808031
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130821','head#short#3',806709) on duplicate key update flow=806709
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130821','head#short#4',794926) on duplicate key update flow=794926
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130821','head2#*#*',3639957) on duplicate key update flow=3639957
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130821','corner#*#*',23155490) on duplicate key update flow=23155490
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130821','pause#*#*',15436993) on duplicate key update flow=15436993
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130821','trail#*#*',12864161) on duplicate key update flow=12864161
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130822','head#long#1',1482472) on duplicate key update flow=1482472
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130822','head#long#2',639204) on duplicate key update flow=639204
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130822','head#long#3',639744) on duplicate key update flow=639744
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130822','head#long#4',639562) on duplicate key update flow=639562
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130822','head#medium#1',1021508) on duplicate key update flow=1021508
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130822','head#medium#2',666234) on duplicate key update flow=666234
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130822','head#medium#3',665525) on duplicate key update flow=665525
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130822','head#medium#4',659128) on duplicate key update flow=659128
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130822','head#short#1',501906) on duplicate key update flow=501906
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130822','head#short#2',323710) on duplicate key update flow=323710
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130822','head#short#3',323662) on duplicate key update flow=323662
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130822','head#short#4',335698) on duplicate key update flow=335698
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130822','head2#*#*',3400982) on duplicate key update flow=3400982
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130822','corner#*#*',7108517) on duplicate key update flow=7108517
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130822','pause#*#*',4739011) on duplicate key update flow=4739011
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130822','trail#*#*',3949176) on duplicate key update flow=3949176
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130823','head#long#1',1606239) on duplicate key update flow=1606239
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130823','head#long#2',754202) on duplicate key update flow=754202
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130823','head#long#3',757374) on duplicate key update flow=757374
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130823','head#long#4',756691) on duplicate key update flow=756691
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130823','head#medium#1',3012605) on duplicate key update flow=3012605
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130823','head#medium#2',2090583) on duplicate key update flow=2090583
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130823','head#medium#3',2099676) on duplicate key update flow=2099676
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130823','head#medium#4',2065956) on duplicate key update flow=2065956
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130823','head#short#1',1695145) on duplicate key update flow=1695145
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130823','head#short#2',1402701) on duplicate key update flow=1402701
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130823','head#short#3',1408623) on duplicate key update flow=1408623
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130823','head#short#4',1327431) on duplicate key update flow=1327431
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130823','head2#*#*',3874506) on duplicate key update flow=3874506
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130823','corner#*#*',17079503) on duplicate key update flow=17079503
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130823','pause#*#*',11386335) on duplicate key update flow=11386335
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130823','trail#*#*',9488613) on duplicate key update flow=9488613
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130824','head#long#1',1489148) on duplicate key update flow=1489148
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130824','head#long#2',648085) on duplicate key update flow=648085
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130824','head#long#3',648738) on duplicate key update flow=648738
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130824','head#long#4',648594) on duplicate key update flow=648594
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130824','head#medium#1',2369627) on duplicate key update flow=2369627
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130824','head#medium#2',1243823) on duplicate key update flow=1243823
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130824','head#medium#3',1249645) on duplicate key update flow=1249645
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130824','head#medium#4',1247268) on duplicate key update flow=1247268
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130824','head#short#1',658329) on duplicate key update flow=658329
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130824','head#short#2',452397) on duplicate key update flow=452397
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130824','head#short#3',454854) on duplicate key update flow=454854
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130824','head#short#4',457352) on duplicate key update flow=457352
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130824','head2#*#*',3434565) on duplicate key update flow=3434565
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130824','corner#*#*',10411074) on duplicate key update flow=10411074
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130824','pause#*#*',6940716) on duplicate key update flow=6940716
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130824','trail#*#*',5783930) on duplicate key update flow=5783930
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130825','head#long#1',1942609) on duplicate key update flow=1942609
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130825','head#long#2',1026675) on duplicate key update flow=1026675
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130825','head#long#3',1027209) on duplicate key update flow=1027209
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130825','head#long#4',1026575) on duplicate key update flow=1026575
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130825','head#medium#1',6678250) on duplicate key update flow=6678250
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130825','head#medium#2',3148466) on duplicate key update flow=3148466
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130825','head#medium#3',3151909) on duplicate key update flow=3151909
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130825','head#medium#4',3145211) on duplicate key update flow=3145211
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130825','head#short#1',1196922) on duplicate key update flow=1196922
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130825','head#short#2',920731) on duplicate key update flow=920731
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130825','head#short#3',923417) on duplicate key update flow=923417
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130825','head#short#4',897422) on duplicate key update flow=897422
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130825','head2#*#*',5023068) on duplicate key update flow=5023068
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130825','corner#*#*',22576856) on duplicate key update flow=22576856
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130825','pause#*#*',15051237) on duplicate key update flow=15051237
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130825','trail#*#*',12542698) on duplicate key update flow=12542698
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130826','head#long#1',1675990) on duplicate key update flow=1675990
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130826','head#long#2',806250) on duplicate key update flow=806250
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130826','head#long#3',807012) on duplicate key update flow=807012
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130826','head#long#4',807074) on duplicate key update flow=807074
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130826','head#medium#1',7205298) on duplicate key update flow=7205298
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130826','head#medium#2',4018640) on duplicate key update flow=4018640
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130826','head#medium#3',4023364) on duplicate key update flow=4023364
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130826','head#medium#4',3982649) on duplicate key update flow=3982649
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130826','head#short#1',1410296) on duplicate key update flow=1410296
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130826','head#short#2',1111895) on duplicate key update flow=1111895
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130826','head#short#3',1114653) on duplicate key update flow=1114653
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130826','head#short#4',1090811) on duplicate key update flow=1090811
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130826','head2#*#*',4096326) on duplicate key update flow=4096326
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130826','corner#*#*',25248538) on duplicate key update flow=25248538
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130826','pause#*#*',16832359) on duplicate key update flow=16832359
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130826','trail#*#*',14026966) on duplicate key update flow=14026966
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130827','head#long#1',1549200) on duplicate key update flow=1549200
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130827','head#long#2',690386) on duplicate key update flow=690386
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130827','head#long#3',690899) on duplicate key update flow=690899
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130827','head#long#4',689739) on duplicate key update flow=689739
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130827','head#medium#1',6158463) on duplicate key update flow=6158463
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130827','head#medium#2',3050108) on duplicate key update flow=3050108
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130827','head#medium#3',3050693) on duplicate key update flow=3050693
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130827','head#medium#4',3033763) on duplicate key update flow=3033763
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130827','head#short#1',1565539) on duplicate key update flow=1565539
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130827','head#short#2',1266428) on duplicate key update flow=1266428
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130827','head#short#3',1273633) on duplicate key update flow=1273633
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130827','head#short#4',1237110) on duplicate key update flow=1237110
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130827','head2#*#*',3620224) on duplicate key update flow=3620224
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130827','corner#*#*',21830364) on duplicate key update flow=21830364
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130827','pause#*#*',14553576) on duplicate key update flow=14553576
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130827','trail#*#*',12127980) on duplicate key update flow=12127980
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130828','head#long#1',1559255) on duplicate key update flow=1559255
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130828','head#long#2',693105) on duplicate key update flow=693105
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130828','head#long#3',693608) on duplicate key update flow=693608
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130828','head#long#4',693989) on duplicate key update flow=693989
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130828','head#medium#1',6553748) on duplicate key update flow=6553748
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130828','head#medium#2',4032645) on duplicate key update flow=4032645
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130828','head#medium#3',4026605) on duplicate key update flow=4026605
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130828','head#medium#4',3985644) on duplicate key update flow=3985644
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130828','head#short#1',1080058) on duplicate key update flow=1080058
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130828','head#short#2',808031) on duplicate key update flow=808031
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130828','head#short#3',806709) on duplicate key update flow=806709
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130828','head#short#4',794926) on duplicate key update flow=794926
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130828','head2#*#*',3639957) on duplicate key update flow=3639957
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130828','corner#*#*',23155490) on duplicate key update flow=23155490
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130828','pause#*#*',15436993) on duplicate key update flow=15436993
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130828','trail#*#*',12864161) on duplicate key update flow=12864161
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130829','head#long#1',1482472) on duplicate key update flow=1482472
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130829','head#long#2',639204) on duplicate key update flow=639204
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130829','head#long#3',639744) on duplicate key update flow=639744
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130829','head#long#4',639562) on duplicate key update flow=639562
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130829','head#medium#1',1021508) on duplicate key update flow=1021508
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130829','head#medium#2',666234) on duplicate key update flow=666234
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130829','head#medium#3',665525) on duplicate key update flow=665525
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130829','head#medium#4',659128) on duplicate key update flow=659128
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130829','head#short#1',501906) on duplicate key update flow=501906
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130829','head#short#2',323710) on duplicate key update flow=323710
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130829','head#short#3',323662) on duplicate key update flow=323662
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130829','head#short#4',335698) on duplicate key update flow=335698
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130829','head2#*#*',3400982) on duplicate key update flow=3400982
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130829','corner#*#*',7108517) on duplicate key update flow=7108517
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130829','pause#*#*',4739011) on duplicate key update flow=4739011
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130829','trail#*#*',3949176) on duplicate key update flow=3949176
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130830','head#long#1',1606239) on duplicate key update flow=1606239
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130830','head#long#2',754202) on duplicate key update flow=754202
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130830','head#long#3',757374) on duplicate key update flow=757374
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130830','head#long#4',756691) on duplicate key update flow=756691
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130830','head#medium#1',3012605) on duplicate key update flow=3012605
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130830','head#medium#2',2090583) on duplicate key update flow=2090583
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130830','head#medium#3',2099676) on duplicate key update flow=2099676
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130830','head#medium#4',2065956) on duplicate key update flow=2065956
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130830','head#short#1',1695145) on duplicate key update flow=1695145
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130830','head#short#2',1402701) on duplicate key update flow=1402701
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130830','head#short#3',1408623) on duplicate key update flow=1408623
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130830','head#short#4',1327431) on duplicate key update flow=1327431
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130830','head2#*#*',3874506) on duplicate key update flow=3874506
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130830','corner#*#*',17079503) on duplicate key update flow=17079503
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130830','pause#*#*',11386335) on duplicate key update flow=11386335
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130830','trail#*#*',9488613) on duplicate key update flow=9488613
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130831','head#long#1',1489148) on duplicate key update flow=1489148
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130831','head#long#2',648085) on duplicate key update flow=648085
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130831','head#long#3',648738) on duplicate key update flow=648738
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130831','head#long#4',648594) on duplicate key update flow=648594
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130831','head#medium#1',2369627) on duplicate key update flow=2369627
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130831','head#medium#2',1243823) on duplicate key update flow=1243823
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130831','head#medium#3',1249645) on duplicate key update flow=1249645
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130831','head#medium#4',1247268) on duplicate key update flow=1247268
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130831','head#short#1',658329) on duplicate key update flow=658329
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130831','head#short#2',452397) on duplicate key update flow=452397
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130831','head#short#3',454854) on duplicate key update flow=454854
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130831','head#short#4',457352) on duplicate key update flow=457352
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130831','head2#*#*',3434565) on duplicate key update flow=3434565
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130831','corner#*#*',10411074) on duplicate key update flow=10411074
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130831','pause#*#*',6940716) on duplicate key update flow=6940716
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130831','trail#*#*',5783930) on duplicate key update flow=5783930
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130901','head#long#1',1942609) on duplicate key update flow=1942609
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130901','head#long#2',1026675) on duplicate key update flow=1026675
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130901','head#long#3',1027209) on duplicate key update flow=1027209
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130901','head#long#4',1026575) on duplicate key update flow=1026575
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130901','head#medium#1',6678250) on duplicate key update flow=6678250
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130901','head#medium#2',3148466) on duplicate key update flow=3148466
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130901','head#medium#3',3151909) on duplicate key update flow=3151909
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130901','head#medium#4',3145211) on duplicate key update flow=3145211
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130901','head#short#1',1196922) on duplicate key update flow=1196922
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130901','head#short#2',920731) on duplicate key update flow=920731
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130901','head#short#3',923417) on duplicate key update flow=923417
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130901','head#short#4',897422) on duplicate key update flow=897422
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130901','head2#*#*',5023068) on duplicate key update flow=5023068
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130901','corner#*#*',22576856) on duplicate key update flow=22576856
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130901','pause#*#*',15051237) on duplicate key update flow=15051237
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130901','trail#*#*',12542698) on duplicate key update flow=12542698
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130902','head#long#1',1675990) on duplicate key update flow=1675990
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130902','head#long#2',806250) on duplicate key update flow=806250
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130902','head#long#3',807012) on duplicate key update flow=807012
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130902','head#long#4',807074) on duplicate key update flow=807074
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130902','head#medium#1',7205298) on duplicate key update flow=7205298
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130902','head#medium#2',4018640) on duplicate key update flow=4018640
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130902','head#medium#3',4023364) on duplicate key update flow=4023364
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130902','head#medium#4',3982649) on duplicate key update flow=3982649
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130902','head#short#1',1410296) on duplicate key update flow=1410296
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130902','head#short#2',1111895) on duplicate key update flow=1111895
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130902','head#short#3',1114653) on duplicate key update flow=1114653
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130902','head#short#4',1090811) on duplicate key update flow=1090811
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130902','head2#*#*',4096326) on duplicate key update flow=4096326
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130902','corner#*#*',25248538) on duplicate key update flow=25248538
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130902','pause#*#*',16832359) on duplicate key update flow=16832359
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130902','trail#*#*',14026966) on duplicate key update flow=14026966
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130903','head#long#1',1549200) on duplicate key update flow=1549200
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130903','head#long#2',690386) on duplicate key update flow=690386
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130903','head#long#3',690899) on duplicate key update flow=690899
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130903','head#long#4',689739) on duplicate key update flow=689739
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130903','head#medium#1',6158463) on duplicate key update flow=6158463
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130903','head#medium#2',3050108) on duplicate key update flow=3050108
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130903','head#medium#3',3050693) on duplicate key update flow=3050693
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130903','head#medium#4',3033763) on duplicate key update flow=3033763
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130903','head#short#1',1565539) on duplicate key update flow=1565539
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130903','head#short#2',1266428) on duplicate key update flow=1266428
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130903','head#short#3',1273633) on duplicate key update flow=1273633
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130903','head#short#4',1237110) on duplicate key update flow=1237110
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130903','head2#*#*',3620224) on duplicate key update flow=3620224
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130903','corner#*#*',21830364) on duplicate key update flow=21830364
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130903','pause#*#*',14553576) on duplicate key update flow=14553576
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130903','trail#*#*',12127980) on duplicate key update flow=12127980
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130904','head#long#1',1559255) on duplicate key update flow=1559255
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130904','head#long#2',693105) on duplicate key update flow=693105
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130904','head#long#3',693608) on duplicate key update flow=693608
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130904','head#long#4',693989) on duplicate key update flow=693989
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130904','head#medium#1',6553748) on duplicate key update flow=6553748
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130904','head#medium#2',4032645) on duplicate key update flow=4032645
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130904','head#medium#3',4026605) on duplicate key update flow=4026605
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130904','head#medium#4',3985644) on duplicate key update flow=3985644
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130904','head#short#1',1080058) on duplicate key update flow=1080058
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130904','head#short#2',808031) on duplicate key update flow=808031
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130904','head#short#3',806709) on duplicate key update flow=806709
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130904','head#short#4',794926) on duplicate key update flow=794926
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130904','head2#*#*',3639957) on duplicate key update flow=3639957
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130904','corner#*#*',23155490) on duplicate key update flow=23155490
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130904','pause#*#*',15436993) on duplicate key update flow=15436993
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130904','trail#*#*',12864161) on duplicate key update flow=12864161
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130905','head#long#1',1482472) on duplicate key update flow=1482472
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130905','head#long#2',639204) on duplicate key update flow=639204
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130905','head#long#3',639744) on duplicate key update flow=639744
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130905','head#long#4',639562) on duplicate key update flow=639562
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130905','head#medium#1',1021508) on duplicate key update flow=1021508
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130905','head#medium#2',666234) on duplicate key update flow=666234
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130905','head#medium#3',665525) on duplicate key update flow=665525
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130905','head#medium#4',659128) on duplicate key update flow=659128
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130905','head#short#1',501906) on duplicate key update flow=501906
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130905','head#short#2',323710) on duplicate key update flow=323710
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130905','head#short#3',323662) on duplicate key update flow=323662
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130905','head#short#4',335698) on duplicate key update flow=335698
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130905','head2#*#*',3400982) on duplicate key update flow=3400982
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130905','corner#*#*',7108517) on duplicate key update flow=7108517
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130905','pause#*#*',4739011) on duplicate key update flow=4739011
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130905','trail#*#*',3949176) on duplicate key update flow=3949176
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130906','head#long#1',1606239) on duplicate key update flow=1606239
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130906','head#long#2',754202) on duplicate key update flow=754202
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130906','head#long#3',757374) on duplicate key update flow=757374
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130906','head#long#4',756691) on duplicate key update flow=756691
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130906','head#medium#1',3012605) on duplicate key update flow=3012605
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130906','head#medium#2',2090583) on duplicate key update flow=2090583
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130906','head#medium#3',2099676) on duplicate key update flow=2099676
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130906','head#medium#4',2065956) on duplicate key update flow=2065956
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130906','head#short#1',1695145) on duplicate key update flow=1695145
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130906','head#short#2',1402701) on duplicate key update flow=1402701
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130906','head#short#3',1408623) on duplicate key update flow=1408623
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130906','head#short#4',1327431) on duplicate key update flow=1327431
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130906','head2#*#*',3874506) on duplicate key update flow=3874506
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130906','corner#*#*',17079503) on duplicate key update flow=17079503
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130906','pause#*#*',11386335) on duplicate key update flow=11386335
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130906','trail#*#*',9488613) on duplicate key update flow=9488613
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130907','head#long#1',1489148) on duplicate key update flow=1489148
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130907','head#long#2',648085) on duplicate key update flow=648085
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130907','head#long#3',648738) on duplicate key update flow=648738
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130907','head#long#4',648594) on duplicate key update flow=648594
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130907','head#medium#1',2369627) on duplicate key update flow=2369627
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130907','head#medium#2',1243823) on duplicate key update flow=1243823
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130907','head#medium#3',1249645) on duplicate key update flow=1249645
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130907','head#medium#4',1247268) on duplicate key update flow=1247268
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130907','head#short#1',658329) on duplicate key update flow=658329
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130907','head#short#2',452397) on duplicate key update flow=452397
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130907','head#short#3',454854) on duplicate key update flow=454854
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130907','head#short#4',457352) on duplicate key update flow=457352
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130907','head2#*#*',3434565) on duplicate key update flow=3434565
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130907','corner#*#*',10411074) on duplicate key update flow=10411074
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130907','pause#*#*',6940716) on duplicate key update flow=6940716
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130907','trail#*#*',5783930) on duplicate key update flow=5783930
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130908','head#long#1',1942609) on duplicate key update flow=1942609
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130908','head#long#2',1026675) on duplicate key update flow=1026675
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130908','head#long#3',1027209) on duplicate key update flow=1027209
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130908','head#long#4',1026575) on duplicate key update flow=1026575
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130908','head#medium#1',6678250) on duplicate key update flow=6678250
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130908','head#medium#2',3148466) on duplicate key update flow=3148466
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130908','head#medium#3',3151909) on duplicate key update flow=3151909
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130908','head#medium#4',3145211) on duplicate key update flow=3145211
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130908','head#short#1',1196922) on duplicate key update flow=1196922
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130908','head#short#2',920731) on duplicate key update flow=920731
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130908','head#short#3',923417) on duplicate key update flow=923417
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130908','head#short#4',897422) on duplicate key update flow=897422
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130908','head2#*#*',5023068) on duplicate key update flow=5023068
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130908','corner#*#*',22576856) on duplicate key update flow=22576856
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130908','pause#*#*',15051237) on duplicate key update flow=15051237
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130908','trail#*#*',12542698) on duplicate key update flow=12542698
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130909','head#long#1',1675990) on duplicate key update flow=1675990
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130909','head#long#2',806250) on duplicate key update flow=806250
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130909','head#long#3',807012) on duplicate key update flow=807012
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130909','head#long#4',807074) on duplicate key update flow=807074
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130909','head#medium#1',7205298) on duplicate key update flow=7205298
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130909','head#medium#2',4018640) on duplicate key update flow=4018640
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130909','head#medium#3',4023364) on duplicate key update flow=4023364
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130909','head#medium#4',3982649) on duplicate key update flow=3982649
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130909','head#short#1',1410296) on duplicate key update flow=1410296
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130909','head#short#2',1111895) on duplicate key update flow=1111895
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130909','head#short#3',1114653) on duplicate key update flow=1114653
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130909','head#short#4',1090811) on duplicate key update flow=1090811
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130909','head2#*#*',4096326) on duplicate key update flow=4096326
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130909','corner#*#*',25248538) on duplicate key update flow=25248538
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130909','pause#*#*',16832359) on duplicate key update flow=16832359
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130909','trail#*#*',14026966) on duplicate key update flow=14026966
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130910','head#long#1',1549200) on duplicate key update flow=1549200
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130910','head#long#2',690386) on duplicate key update flow=690386
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130910','head#long#3',690899) on duplicate key update flow=690899
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130910','head#long#4',689739) on duplicate key update flow=689739
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130910','head#medium#1',6158463) on duplicate key update flow=6158463
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130910','head#medium#2',3050108) on duplicate key update flow=3050108
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130910','head#medium#3',3050693) on duplicate key update flow=3050693
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130910','head#medium#4',3033763) on duplicate key update flow=3033763
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130910','head#short#1',1565539) on duplicate key update flow=1565539
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130910','head#short#2',1266428) on duplicate key update flow=1266428
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130910','head#short#3',1273633) on duplicate key update flow=1273633
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130910','head#short#4',1237110) on duplicate key update flow=1237110
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130910','head2#*#*',3620224) on duplicate key update flow=3620224
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130910','corner#*#*',21830364) on duplicate key update flow=21830364
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130910','pause#*#*',14553576) on duplicate key update flow=14553576
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130910','trail#*#*',12127980) on duplicate key update flow=12127980
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130911','head#long#1',1559255) on duplicate key update flow=1559255
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130911','head#long#2',693105) on duplicate key update flow=693105
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130911','head#long#3',693608) on duplicate key update flow=693608
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130911','head#long#4',693989) on duplicate key update flow=693989
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130911','head#medium#1',6553748) on duplicate key update flow=6553748
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130911','head#medium#2',4032645) on duplicate key update flow=4032645
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130911','head#medium#3',4026605) on duplicate key update flow=4026605
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130911','head#medium#4',3985644) on duplicate key update flow=3985644
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130911','head#short#1',1080058) on duplicate key update flow=1080058
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130911','head#short#2',808031) on duplicate key update flow=808031
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130911','head#short#3',806709) on duplicate key update flow=806709
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130911','head#short#4',794926) on duplicate key update flow=794926
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130911','head2#*#*',3639957) on duplicate key update flow=3639957
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130911','corner#*#*',23155490) on duplicate key update flow=23155490
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130911','pause#*#*',15436993) on duplicate key update flow=15436993
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130911','trail#*#*',12864161) on duplicate key update flow=12864161
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130912','head#long#1',1482472) on duplicate key update flow=1482472
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130912','head#long#2',639204) on duplicate key update flow=639204
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130912','head#long#3',639744) on duplicate key update flow=639744
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130912','head#long#4',639562) on duplicate key update flow=639562
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130912','head#medium#1',1021508) on duplicate key update flow=1021508
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130912','head#medium#2',666234) on duplicate key update flow=666234
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130912','head#medium#3',665525) on duplicate key update flow=665525
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130912','head#medium#4',659128) on duplicate key update flow=659128
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130912','head#short#1',501906) on duplicate key update flow=501906
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130912','head#short#2',323710) on duplicate key update flow=323710
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130912','head#short#3',323662) on duplicate key update flow=323662
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130912','head#short#4',335698) on duplicate key update flow=335698
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130912','head2#*#*',3400982) on duplicate key update flow=3400982
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130912','corner#*#*',7108517) on duplicate key update flow=7108517
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130912','pause#*#*',4739011) on duplicate key update flow=4739011
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130912','trail#*#*',3949176) on duplicate key update flow=3949176
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130913','head#long#1',1606239) on duplicate key update flow=1606239
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130913','head#long#2',754202) on duplicate key update flow=754202
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130913','head#long#3',757374) on duplicate key update flow=757374
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130913','head#long#4',756691) on duplicate key update flow=756691
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130913','head#medium#1',3012605) on duplicate key update flow=3012605
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130913','head#medium#2',2090583) on duplicate key update flow=2090583
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130913','head#medium#3',2099676) on duplicate key update flow=2099676
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130913','head#medium#4',2065956) on duplicate key update flow=2065956
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130913','head#short#1',1695145) on duplicate key update flow=1695145
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130913','head#short#2',1402701) on duplicate key update flow=1402701
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130913','head#short#3',1408623) on duplicate key update flow=1408623
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130913','head#short#4',1327431) on duplicate key update flow=1327431
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130913','head2#*#*',3874506) on duplicate key update flow=3874506
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130913','corner#*#*',17079503) on duplicate key update flow=17079503
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130913','pause#*#*',11386335) on duplicate key update flow=11386335
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130913','trail#*#*',9488613) on duplicate key update flow=9488613
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130914','head#long#1',1489148) on duplicate key update flow=1489148
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130914','head#long#2',648085) on duplicate key update flow=648085
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130914','head#long#3',648738) on duplicate key update flow=648738
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130914','head#long#4',648594) on duplicate key update flow=648594
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130914','head#medium#1',2369627) on duplicate key update flow=2369627
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130914','head#medium#2',1243823) on duplicate key update flow=1243823
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130914','head#medium#3',1249645) on duplicate key update flow=1249645
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130914','head#medium#4',1247268) on duplicate key update flow=1247268
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130914','head#short#1',658329) on duplicate key update flow=658329
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130914','head#short#2',452397) on duplicate key update flow=452397
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130914','head#short#3',454854) on duplicate key update flow=454854
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130914','head#short#4',457352) on duplicate key update flow=457352
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130914','head2#*#*',3434565) on duplicate key update flow=3434565
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130914','corner#*#*',10411074) on duplicate key update flow=10411074
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130914','pause#*#*',6940716) on duplicate key update flow=6940716
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130914','trail#*#*',5783930) on duplicate key update flow=5783930
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130915','head#long#1',1942609) on duplicate key update flow=1942609
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130915','head#long#2',1026675) on duplicate key update flow=1026675
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130915','head#long#3',1027209) on duplicate key update flow=1027209
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130915','head#long#4',1026575) on duplicate key update flow=1026575
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130915','head#medium#1',6678250) on duplicate key update flow=6678250
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130915','head#medium#2',3148466) on duplicate key update flow=3148466
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130915','head#medium#3',3151909) on duplicate key update flow=3151909
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130915','head#medium#4',3145211) on duplicate key update flow=3145211
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130915','head#short#1',1196922) on duplicate key update flow=1196922
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130915','head#short#2',920731) on duplicate key update flow=920731
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130915','head#short#3',923417) on duplicate key update flow=923417
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130915','head#short#4',897422) on duplicate key update flow=897422
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130915','head2#*#*',5023068) on duplicate key update flow=5023068
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130915','corner#*#*',22576856) on duplicate key update flow=22576856
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130915','pause#*#*',15051237) on duplicate key update flow=15051237
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130915','trail#*#*',12542698) on duplicate key update flow=12542698
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130916','head#long#1',1675990) on duplicate key update flow=1675990
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130916','head#long#2',806250) on duplicate key update flow=806250
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130916','head#long#3',807012) on duplicate key update flow=807012
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130916','head#long#4',807074) on duplicate key update flow=807074
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130916','head#medium#1',7205298) on duplicate key update flow=7205298
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130916','head#medium#2',4018640) on duplicate key update flow=4018640
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130916','head#medium#3',4023364) on duplicate key update flow=4023364
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130916','head#medium#4',3982649) on duplicate key update flow=3982649
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130916','head#short#1',1410296) on duplicate key update flow=1410296
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130916','head#short#2',1111895) on duplicate key update flow=1111895
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130916','head#short#3',1114653) on duplicate key update flow=1114653
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130916','head#short#4',1090811) on duplicate key update flow=1090811
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130916','head2#*#*',4096326) on duplicate key update flow=4096326
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130916','corner#*#*',25248538) on duplicate key update flow=25248538
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130916','pause#*#*',16832359) on duplicate key update flow=16832359
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130916','trail#*#*',14026966) on duplicate key update flow=14026966
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130917','head#long#1',1549200) on duplicate key update flow=1549200
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130917','head#long#2',690386) on duplicate key update flow=690386
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130917','head#long#3',690899) on duplicate key update flow=690899
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130917','head#long#4',689739) on duplicate key update flow=689739
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130917','head#medium#1',6158463) on duplicate key update flow=6158463
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130917','head#medium#2',3050108) on duplicate key update flow=3050108
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130917','head#medium#3',3050693) on duplicate key update flow=3050693
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130917','head#medium#4',3033763) on duplicate key update flow=3033763
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130917','head#short#1',1565539) on duplicate key update flow=1565539
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130917','head#short#2',1266428) on duplicate key update flow=1266428
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130917','head#short#3',1273633) on duplicate key update flow=1273633
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130917','head#short#4',1237110) on duplicate key update flow=1237110
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130917','head2#*#*',3620224) on duplicate key update flow=3620224
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130917','corner#*#*',21830364) on duplicate key update flow=21830364
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130917','pause#*#*',14553576) on duplicate key update flow=14553576
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130917','trail#*#*',12127980) on duplicate key update flow=12127980
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130918','head#long#1',1559255) on duplicate key update flow=1559255
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130918','head#long#2',693105) on duplicate key update flow=693105
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130918','head#long#3',693608) on duplicate key update flow=693608
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130918','head#long#4',693989) on duplicate key update flow=693989
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130918','head#medium#1',6553748) on duplicate key update flow=6553748
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130918','head#medium#2',4032645) on duplicate key update flow=4032645
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130918','head#medium#3',4026605) on duplicate key update flow=4026605
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130918','head#medium#4',3985644) on duplicate key update flow=3985644
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130918','head#short#1',1080058) on duplicate key update flow=1080058
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130918','head#short#2',808031) on duplicate key update flow=808031
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130918','head#short#3',806709) on duplicate key update flow=806709
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130918','head#short#4',794926) on duplicate key update flow=794926
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130918','head2#*#*',3639957) on duplicate key update flow=3639957
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130918','corner#*#*',23155490) on duplicate key update flow=23155490
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130918','pause#*#*',15436993) on duplicate key update flow=15436993
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130918','trail#*#*',12864161) on duplicate key update flow=12864161
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130919','head#long#1',1482472) on duplicate key update flow=1482472
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130919','head#long#2',639204) on duplicate key update flow=639204
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130919','head#long#3',639744) on duplicate key update flow=639744
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130919','head#long#4',639562) on duplicate key update flow=639562
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130919','head#medium#1',1021508) on duplicate key update flow=1021508
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130919','head#medium#2',666234) on duplicate key update flow=666234
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130919','head#medium#3',665525) on duplicate key update flow=665525
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130919','head#medium#4',659128) on duplicate key update flow=659128
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130919','head#short#1',501906) on duplicate key update flow=501906
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130919','head#short#2',323710) on duplicate key update flow=323710
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130919','head#short#3',323662) on duplicate key update flow=323662
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130919','head#short#4',335698) on duplicate key update flow=335698
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130919','head2#*#*',3400982) on duplicate key update flow=3400982
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130919','corner#*#*',7108517) on duplicate key update flow=7108517
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130919','pause#*#*',4739011) on duplicate key update flow=4739011
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130919','trail#*#*',3949176) on duplicate key update flow=3949176
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130920','head#long#1',1606239) on duplicate key update flow=1606239
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130920','head#long#2',754202) on duplicate key update flow=754202
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130920','head#long#3',757374) on duplicate key update flow=757374
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130920','head#long#4',756691) on duplicate key update flow=756691
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130920','head#medium#1',3012605) on duplicate key update flow=3012605
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130920','head#medium#2',2090583) on duplicate key update flow=2090583
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130920','head#medium#3',2099676) on duplicate key update flow=2099676
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130920','head#medium#4',2065956) on duplicate key update flow=2065956
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130920','head#short#1',1695145) on duplicate key update flow=1695145
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130920','head#short#2',1402701) on duplicate key update flow=1402701
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130920','head#short#3',1408623) on duplicate key update flow=1408623
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130920','head#short#4',1327431) on duplicate key update flow=1327431
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130920','head2#*#*',3874506) on duplicate key update flow=3874506
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130920','corner#*#*',17079503) on duplicate key update flow=17079503
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130920','pause#*#*',11386335) on duplicate key update flow=11386335
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130920','trail#*#*',9488613) on duplicate key update flow=9488613
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130921','head#long#1',1489148) on duplicate key update flow=1489148
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130921','head#long#2',648085) on duplicate key update flow=648085
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130921','head#long#3',648738) on duplicate key update flow=648738
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130921','head#long#4',648594) on duplicate key update flow=648594
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130921','head#medium#1',2369627) on duplicate key update flow=2369627
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130921','head#medium#2',1243823) on duplicate key update flow=1243823
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130921','head#medium#3',1249645) on duplicate key update flow=1249645
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130921','head#medium#4',1247268) on duplicate key update flow=1247268
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130921','head#short#1',658329) on duplicate key update flow=658329
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130921','head#short#2',452397) on duplicate key update flow=452397
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130921','head#short#3',454854) on duplicate key update flow=454854
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130921','head#short#4',457352) on duplicate key update flow=457352
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130921','head2#*#*',3434565) on duplicate key update flow=3434565
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130921','corner#*#*',10411074) on duplicate key update flow=10411074
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130921','pause#*#*',6940716) on duplicate key update flow=6940716
+sqlinsert into pdps2_pv (dt, pdps, flow) values ('20130921','trail#*#*',5783930) on duplicate key update flow=5783930
+insert 1440 lines into table pdps2_pv
